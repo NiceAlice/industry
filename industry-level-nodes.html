@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业层级节点 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <div>
+                <h1 class="text-lg font-bold text-gray-900" id="industryName">低空经济产业</h1>
+                <p class="text-xs text-gray-500" id="levelName">上游</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 统计信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <p class="text-xs text-gray-500 mb-1">子节点总数</p>
+                    <p class="text-2xl font-bold text-blue-600" id="totalNodes">8</p>
+                </div>
+                <div class="flex-1 text-right">
+                    <p class="text-xs text-gray-500 mb-1">关联企业总数</p>
+                    <p class="text-2xl font-bold text-green-600" id="totalEnterprises">156</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 子节点列表 -->
+        <div class="bg-white" id="nodesList">
+            <!-- 子节点列表将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        let industryName = '';
+        let levelName = '';
+        
+        // 模拟子节点数据
+        const nodesData = {
+            '低空经济产业-上游': [
+                { name: '支持系统', count: 28, color: 'bg-blue-500' },
+                { name: '动力系统', count: 35, color: 'bg-green-500' },
+                { name: '飞控系统', count: 22, color: 'bg-purple-500' },
+                { name: '通信系统', count: 18, color: 'bg-orange-500' },
+                { name: '导航系统', count: 15, color: 'bg-pink-500' },
+                { name: '传感器', count: 20, color: 'bg-indigo-500' },
+                { name: '电池系统', count: 12, color: 'bg-cyan-500' },
+                { name: '材料供应', count: 6, color: 'bg-yellow-500' }
+            ],
+            '低空经济产业-中游': [
+                { name: '总装制造', count: 42, color: 'bg-blue-500' },
+                { name: '整机研发', count: 38, color: 'bg-green-500' },
+                { name: '系统集成', count: 25, color: 'bg-purple-500' },
+                { name: '测试验证', count: 18, color: 'bg-orange-500' }
+            ],
+            '人工智能产业-上游': [
+                { name: '底层软件', count: 32, color: 'bg-blue-500' },
+                { name: '芯片设计', count: 28, color: 'bg-green-500' },
+                { name: '算法研发', count: 45, color: 'bg-purple-500' },
+                { name: '数据服务', count: 22, color: 'bg-orange-500' },
+                { name: '云计算', count: 18, color: 'bg-pink-500' }
+            ]
+        };
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            industryName = decodeURIComponent(urlParams.get('industry')) || '低空经济产业';
+            levelName = decodeURIComponent(urlParams.get('level')) || '上游';
+
+            // 设置页面标题
+            document.getElementById('industryName').textContent = industryName;
+            document.getElementById('levelName').textContent = levelName;
+
+            // 获取对应的子节点数据
+            const key = `${industryName}-${levelName}`;
+            const nodes = nodesData[key] || nodesData['低空经济产业-上游'];
+
+            // 计算总数
+            const totalEnterprises = nodes.reduce((sum, node) => sum + node.count, 0);
+            document.getElementById('totalNodes').textContent = nodes.length;
+            document.getElementById('totalEnterprises').textContent = totalEnterprises;
+
+            // 渲染子节点列表
+            renderNodesList(nodes);
+        }
+
+        function renderNodesList(nodes) {
+            const html = nodes.map((node, index) => `
+                <div class="px-4 py-4 ${index < nodes.length - 1 ? 'border-b border-gray-100' : ''} active:bg-gray-50 cursor-pointer" onclick="viewNodeEnterprises('${node.name}')">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 ${node.color} rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-sm font-bold text-gray-900 mb-1">${node.name}</h3>
+                            <p class="text-xs text-gray-500">关联企业 <span class="text-blue-600 font-semibold">${node.count}</span> 家</p>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('nodesList').innerHTML = html;
+        }
+
+        function viewNodeEnterprises(nodeName) {
+            window.location.href = `industry-node-enterprises.html?node=${encodeURIComponent(nodeName)}`;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

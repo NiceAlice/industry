@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业图谱 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .chain-node {
+            transition: all 0.3s;
+        }
+        .chain-node:active {
+            transform: scale(0.95);
+        }
+        .connection-line {
+            border-left: 2px dashed #CBD5E1;
+            height: 20px;
+            margin: 0 auto;
+            width: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">产业图谱</h1>
+            <button onclick="viewMindMap()" class="flex items-center space-x-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 产业链选择 -->
+    <div class="bg-white px-4 py-3 border-b">
+        <div class="flex items-center space-x-2 overflow-x-auto">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm whitespace-nowrap" onclick="selectChain('new-energy')">新能源产业链</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('smart-manufacturing')">智能制造</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('biomedical')">生物医药</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('electronics')">电子信息</button>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 产业链概览 -->
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-base font-bold text-gray-800">新能源产业链</h2>
+                <span class="text-xs text-gray-500">共38个环节</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+                <div class="bg-blue-50 rounded-lg p-2">
+                    <div class="text-lg font-bold text-blue-600">856</div>
+                    <div class="text-xs text-gray-600">企业数量</div>
+                </div>
+                <div class="bg-green-50 rounded-lg p-2">
+                    <div class="text-lg font-bold text-green-600">¥2,458亿</div>
+                    <div class="text-xs text-gray-600">产值规模</div>
+                </div>
+                <div class="bg-purple-50 rounded-lg p-2">
+                    <div class="text-lg font-bold text-purple-600">12.5万</div>
+                    <div class="text-xs text-gray-600">从业人员</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产业链图谱 -->
+        <div class="mx-4 mt-4">
+            <!-- 上游 -->
+            <div class="mb-6">
+                <div class="flex items-center mb-3">
+                    <div class="w-1 h-5 bg-blue-600 rounded mr-2"></div>
+                    <h3 class="text-sm font-bold text-gray-800">上游 - 原材料与设备</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500" onclick="showNodeDetail('lithium')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">锂矿资源开采</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：45家</span>
+                                    <span>产值：¥358亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500" onclick="showNodeDetail('materials')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">正负极材料</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：68家</span>
+                                    <span>产值：¥526亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500" onclick="showNodeDetail('equipment')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">生产设备制造</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：52家</span>
+                                    <span>产值：¥412亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-line"></div>
+
+            <!-- 中游 -->
+            <div class="mb-6">
+                <div class="flex items-center mb-3">
+                    <div class="w-1 h-5 bg-green-600 rounded mr-2"></div>
+                    <h3 class="text-sm font-bold text-gray-800">中游 - 核心制造</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-green-500" onclick="showNodeDetail('battery')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">动力电池制造</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：128家</span>
+                                    <span>产值：¥856亿</span>
+                                </div>
+                                <div class="mt-2 flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded">核心环节</span>
+                                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-600 text-xs rounded">技术密集</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-green-500" onclick="showNodeDetail('motor')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">电机电控系统</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：95家</span>
+                                    <span>产值：¥624亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-green-500" onclick="showNodeDetail('vehicle')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">整车制造</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：38家</span>
+                                    <span>产值：¥1,256亿</span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded">核心环节</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connection-line"></div>
+
+            <!-- 下游 -->
+            <div class="mb-6">
+                <div class="flex items-center mb-3">
+                    <div class="w-1 h-5 bg-purple-600 rounded mr-2"></div>
+                    <h3 class="text-sm font-bold text-gray-800">下游 - 应用与服务</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-purple-500" onclick="showNodeDetail('sales')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">销售与渠道</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：256家</span>
+                                    <span>产值：¥1,856亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-purple-500" onclick="showNodeDetail('charging')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">充电基础设施</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：142家</span>
+                                    <span>产值：¥328亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="chain-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-purple-500" onclick="showNodeDetail('aftermarket')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-800 mb-1">售后与运维</h4>
+                                <div class="flex items-center space-x-3 text-xs text-gray-500">
+                                    <span>企业：186家</span>
+                                    <span>产值：¥456亿</span>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function viewMindMap() {
+            window.location.href = 'atlas-mindmap.html';
+        }
+
+        function selectChain(chain) {
+            const buttons = document.querySelectorAll('.bg-blue-600, .bg-gray-100');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.add('bg-blue-600', 'text-white');
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            
+            const names = {
+                'new-energy': '新能源产业链',
+                'smart-manufacturing': '智能制造产业链',
+                'biomedical': '生物医药产业链',
+                'electronics': '电子信息产业链'
+            };
+            alert('切换到：' + names[chain]);
+        }
+
+        function showNodeDetail(node) {
+            alert('查看环节详情：' + node);
+        }
+    </script>
+</body>
+</html>

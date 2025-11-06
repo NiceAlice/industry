@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>知识产权统计 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .filter-btn {
+            transition: all 0.3s;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        .filter-btn.active {
+            background-color: #1E88E5;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">知识产权统计</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 企业信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold text-blue-600" id="companyInitial">福</span>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-base font-bold text-gray-900" id="companyName">福建龙净环保股份有限公司</h2>
+                    <p class="text-xs text-gray-500 mt-1">知识产权数据统计与分析</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 专利统计 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">专利统计</h3>
+                <div class="flex items-center space-x-2">
+                    <button class="filter-btn active" onclick="switchPatentFilter('all')" id="patentAllBtn">全部</button>
+                    <button class="filter-btn text-gray-600" onclick="switchPatentFilter('industry')" id="patentIndustryBtn">
+                        <span id="industryName">新能源</span>
+                    </button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="patentChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 商标统计 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">商标统计</h3>
+                <span class="text-xs text-gray-500">近3年数据</span>
+            </div>
+            <div class="h-64">
+                <canvas id="trademarkChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 软著统计 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">软著统计</h3>
+                <span class="text-xs text-gray-500">近3年趋势</span>
+            </div>
+            <div class="h-64">
+                <canvas id="copyrightChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEnterprise = null;
+        let patentChart = null;
+        let trademarkChart = null;
+        let copyrightChart = null;
+        let currentPatentFilter = 'all';
+
+        // 模拟企业数据
+        const enterprises = [
+            { id: 1, name: '福建龙净环保股份有限公司', industry: '新能源' },
+            { id: 2, name: '合肥阳光电源股份有限公司', industry: '新能源' },
+            { id: 3, name: '科大讯飞股份有限公司', industry: '人工智能' }
+        ];
+
+        // 模拟专利数据
+        const patentData = {
+            all: {
+                invention: [42, 48, 52],      // 发明专利
+                utility: [28, 32, 35],        // 实用新型
+                design: [15, 18, 21],         // 外观设计
+                pct: [8, 10, 12]              // PCT国际专利
+            },
+            industry: {
+                invention: [25, 30, 34],
+                utility: [18, 22, 25],
+                design: [8, 10, 12],
+                pct: [5, 7, 8]
+            }
+        };
+
+        // 模拟商标数据
+        const trademarkData = [28, 35, 42];
+
+        // 模拟软著数据
+        const copyrightData = [18, 22, 28];
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const enterpriseId = parseInt(urlParams.get('id')) || 1;
+
+            // 获取企业信息
+            currentEnterprise = enterprises.find(e => e.id === enterpriseId) || enterprises[0];
+
+            // 渲染企业信息
+            document.getElementById('companyName').textContent = currentEnterprise.name;
+            document.getElementById('companyInitial').textContent = currentEnterprise.name.substring(0, 1);
+            document.getElementById('industryName').textContent = currentEnterprise.industry;
+
+            // 初始化图表
+            initPatentChart('all');
+            initTrademarkChart();
+            initCopyrightChart();
+        }
+
+        function initPatentChart(filter) {
+            const ctx = document.getElementById('patentChart');
+            
+            if (patentChart) {
+                patentChart.destroy();
+            }
+
+            const data = patentData[filter];
+
+            patentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022年', '2023年', '2024年'],
+                    datasets: [
+                        {
+                            label: '发明专利',
+                            data: data.invention,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgb(59, 130, 246)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '实用新型',
+                            data: data.utility,
+                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                            borderColor: 'rgb(34, 197, 94)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '外观设计',
+                            data: data.design,
+                            backgroundColor: 'rgba(249, 115, 22, 0.8)',
+                            borderColor: 'rgb(249, 115, 22)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'PCT',
+                            data: data.pct,
+                            backgroundColor: 'rgba(168, 85, 247, 0.8)',
+                            borderColor: 'rgb(168, 85, 247)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '件';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initTrademarkChart() {
+            const ctx = document.getElementById('trademarkChart');
+
+            trademarkChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022年', '2023年', '2024年'],
+                    datasets: [{
+                        label: '商标数量',
+                        data: trademarkData,
+                        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                        borderColor: 'rgb(34, 197, 94)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '件';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initCopyrightChart() {
+            const ctx = document.getElementById('copyrightChart');
+
+            copyrightChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2022年', '2023年', '2024年'],
+                    datasets: [{
+                        label: '软著数量',
+                        data: copyrightData,
+                        borderColor: 'rgb(168, 85, 247)',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '件';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchPatentFilter(filter) {
+            currentPatentFilter = filter;
+            
+            // 更新按钮状态
+            document.getElementById('patentAllBtn').classList.toggle('active', filter === 'all');
+            document.getElementById('patentAllBtn').classList.toggle('text-gray-600', filter !== 'all');
+            document.getElementById('patentIndustryBtn').classList.toggle('active', filter === 'industry');
+            document.getElementById('patentIndustryBtn').classList.toggle('text-gray-600', filter !== 'industry');
+            
+            // 重新渲染图表
+            initPatentChart(filter);
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

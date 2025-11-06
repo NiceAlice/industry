@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>风险列表 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .filter-btn {
+            transition: all 0.3s;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid #E5E7EB;
+        }
+        .filter-btn.active {
+            background-color: #1E88E5;
+            color: white;
+            border-color: #1E88E5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">风险列表</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 企业信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold text-blue-600" id="companyInitial">福</span>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-base font-bold text-gray-900" id="companyName">福建龙净环保股份有限公司</h2>
+                    <p class="text-xs text-gray-500 mt-1">风险总数：<span class="text-red-600 font-semibold" id="totalRisks">10314</span> 条</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 风险统计 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-red-50 rounded-lg p-3 text-center">
+                    <div class="text-xs text-gray-600 mb-1">高风险</div>
+                    <div class="text-2xl font-bold text-red-600">385</div>
+                </div>
+                <div class="bg-orange-50 rounded-lg p-3 text-center">
+                    <div class="text-xs text-gray-600 mb-1">中风险</div>
+                    <div class="text-2xl font-bold text-orange-600">668</div>
+                </div>
+                <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                    <div class="text-xs text-gray-600 mb-1">低风险</div>
+                    <div class="text-2xl font-bold text-yellow-600">9261</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 筛选器 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="mb-3">
+                <div class="text-xs text-gray-600 mb-2">风险等级</div>
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn active" onclick="filterByLevel('all')" id="levelAll">全部</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByLevel('high')" id="levelHigh">高风险</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByLevel('medium')" id="levelMedium">中风险</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByLevel('low')" id="levelLow">低风险</button>
+                </div>
+            </div>
+            <div>
+                <div class="text-xs text-gray-600 mb-2">风险状态</div>
+                <div class="flex flex-wrap gap-2">
+                    <button class="filter-btn active" onclick="filterByStatus('all')" id="statusAll">全部</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByStatus('active')" id="statusActive">进行中</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByStatus('resolved')" id="statusResolved">已解决</button>
+                    <button class="filter-btn text-gray-600" onclick="filterByStatus('monitoring')" id="statusMonitoring">监控中</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 风险列表 -->
+        <div class="bg-white" id="riskList">
+            <!-- 风险列表将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        let currentEnterprise = null;
+        let currentLevelFilter = 'all';
+        let currentStatusFilter = 'all';
+
+        // 模拟企业数据
+        const enterprises = [
+            { id: 1, name: '福建龙净环保股份有限公司', industry: '新能源' },
+            { id: 2, name: '合肥阳光电源股份有限公司', industry: '新能源' },
+            { id: 3, name: '科大讯飞股份有限公司', industry: '人工智能' }
+        ];
+
+        // 模拟风险数据
+        const risksData = [
+            {
+                type: '经营风险',
+                level: 'high',
+                levelText: '高风险',
+                levelColor: 'text-red-600',
+                levelBg: 'bg-red-50',
+                status: 'active',
+                statusText: '进行中',
+                statusColor: 'text-orange-600',
+                time: '2024-11-01 09:30',
+                description: '企业近期营业收入下降超过20%，现金流紧张，存在资金链断裂风险'
+            },
+            {
+                type: '法律诉讼',
+                level: 'high',
+                levelText: '高风险',
+                levelColor: 'text-red-600',
+                levelBg: 'bg-red-50',
+                status: 'active',
+                statusText: '进行中',
+                statusColor: 'text-orange-600',
+                time: '2024-10-28 14:20',
+                description: '涉及重大合同纠纷诉讼，标的金额达5000万元，可能影响企业信用评级'
+            },
+            {
+                type: '环保违规',
+                level: 'medium',
+                levelText: '中风险',
+                levelColor: 'text-orange-600',
+                levelBg: 'bg-orange-50',
+                status: 'monitoring',
+                statusText: '监控中',
+                statusColor: 'text-blue-600',
+                time: '2024-10-25 16:45',
+                description: '生产过程中排放指标接近环保红线，需加强监控和整改'
+            },
+            {
+                type: '税务风险',
+                level: 'medium',
+                levelText: '中风险',
+                levelColor: 'text-orange-600',
+                levelBg: 'bg-orange-50',
+                status: 'active',
+                statusText: '进行中',
+                statusColor: 'text-orange-600',
+                time: '2024-10-20 10:15',
+                description: '存在税务申报延迟情况，可能面临税务处罚'
+            },
+            {
+                type: '供应链风险',
+                level: 'medium',
+                levelText: '中风险',
+                levelColor: 'text-orange-600',
+                levelBg: 'bg-orange-50',
+                status: 'resolved',
+                statusText: '已解决',
+                statusColor: 'text-green-600',
+                time: '2024-10-15 11:30',
+                description: '主要供应商出现经营困难，已寻找替代供应商并签订合作协议'
+            },
+            {
+                type: '市场竞争',
+                level: 'low',
+                levelText: '低风险',
+                levelColor: 'text-yellow-600',
+                levelBg: 'bg-yellow-50',
+                status: 'monitoring',
+                statusText: '监控中',
+                statusColor: 'text-blue-600',
+                time: '2024-10-10 15:20',
+                description: '行业内出现新的竞争对手，市场份额可能受到轻微影响'
+            },
+            {
+                type: '技术风险',
+                level: 'low',
+                levelText: '低风险',
+                levelColor: 'text-yellow-600',
+                levelBg: 'bg-yellow-50',
+                status: 'monitoring',
+                statusText: '监控中',
+                statusColor: 'text-blue-600',
+                time: '2024-10-05 09:00',
+                description: '部分技术专利即将到期，需要及时续期或申请新专利'
+            },
+            {
+                type: '人员流动',
+                level: 'low',
+                levelText: '低风险',
+                levelColor: 'text-yellow-600',
+                levelBg: 'bg-yellow-50',
+                status: 'resolved',
+                statusText: '已解决',
+                statusColor: 'text-green-600',
+                time: '2024-09-28 14:30',
+                description: '核心技术人员离职，已完成知识交接并招聘新人'
+            },
+            {
+                type: '信用风险',
+                level: 'low',
+                levelText: '低风险',
+                levelColor: 'text-yellow-600',
+                levelBg: 'bg-yellow-50',
+                status: 'monitoring',
+                statusText: '监控中',
+                statusColor: 'text-blue-600',
+                time: '2024-09-20 10:45',
+                description: '部分客户账期延长，应收账款增加，需加强催收'
+            },
+            {
+                type: '政策变化',
+                level: 'low',
+                levelText: '低风险',
+                levelColor: 'text-yellow-600',
+                levelBg: 'bg-yellow-50',
+                status: 'monitoring',
+                statusText: '监控中',
+                statusColor: 'text-blue-600',
+                time: '2024-09-15 16:00',
+                description: '行业政策可能调整，需密切关注政策动向'
+            }
+        ];
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const enterpriseId = parseInt(urlParams.get('id')) || 1;
+
+            // 获取企业信息
+            currentEnterprise = enterprises.find(e => e.id === enterpriseId) || enterprises[0];
+
+            // 渲染企业信息
+            document.getElementById('companyName').textContent = currentEnterprise.name;
+            document.getElementById('companyInitial').textContent = currentEnterprise.name.substring(0, 1);
+            document.getElementById('totalRisks').textContent = '10314';
+
+            // 渲染风险列表
+            renderRiskList();
+        }
+
+        function renderRiskList() {
+            // 筛选数据
+            let filteredRisks = risksData;
+            
+            if (currentLevelFilter !== 'all') {
+                filteredRisks = filteredRisks.filter(risk => risk.level === currentLevelFilter);
+            }
+            
+            if (currentStatusFilter !== 'all') {
+                filteredRisks = filteredRisks.filter(risk => risk.status === currentStatusFilter);
+            }
+
+            const html = filteredRisks.map((risk, index) => `
+                <div class="px-4 py-4 ${index < filteredRisks.length - 1 ? 'border-b border-gray-100' : ''}">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center">
+                            <span class="px-2 py-1 ${risk.levelBg} ${risk.levelColor} text-xs rounded mr-2">${risk.levelText}</span>
+                            <h3 class="text-sm font-bold text-gray-900">${risk.type}</h3>
+                        </div>
+                        <span class="text-xs ${risk.statusColor} font-medium">${risk.statusText}</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-2 leading-relaxed">${risk.description}</p>
+                    <div class="flex items-center text-xs text-gray-500">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        预警时间：${risk.time}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('riskList').innerHTML = html || '<div class="px-4 py-8 text-center text-gray-500 text-sm">暂无符合条件的风险记录</div>';
+        }
+
+        function filterByLevel(level) {
+            currentLevelFilter = level;
+            
+            // 更新按钮状态
+            ['all', 'high', 'medium', 'low'].forEach(l => {
+                const btn = document.getElementById('level' + l.charAt(0).toUpperCase() + l.slice(1));
+                btn.classList.toggle('active', l === level);
+                btn.classList.toggle('text-gray-600', l !== level);
+            });
+            
+            renderRiskList();
+        }
+
+        function filterByStatus(status) {
+            currentStatusFilter = status;
+            
+            // 更新按钮状态
+            ['all', 'active', 'resolved', 'monitoring'].forEach(s => {
+                const btn = document.getElementById('status' + s.charAt(0).toUpperCase() + s.slice(1));
+                btn.classList.toggle('active', s === status);
+                btn.classList.toggle('text-gray-600', s !== status);
+            });
+            
+            renderRiskList();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

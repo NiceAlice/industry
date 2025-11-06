@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>创新平台详情 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .section-card {
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">创新平台详情</h1>
+            <button onclick="sharePlatform()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 基本信息 -->
+    <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+        <div class="flex items-start justify-between mb-3">
+            <h2 class="text-lg font-bold text-gray-900 flex-1" id="platformName">国家人工智能技术创新中心</h2>
+            <span class="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded whitespace-nowrap ml-2">人工智能</span>
+        </div>
+        
+        <div class="space-y-3 text-sm">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
+                <div class="flex-1">
+                    <span class="text-gray-500">标签：</span>
+                    <div class="flex flex-wrap gap-2 mt-1">
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded">国家级</span>
+                        <span class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded">技术创新</span>
+                        <span class="px-2 py-1 bg-green-50 text-green-600 text-xs rounded">产学研合作</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-gray-500">成立时间：</span>
+                <span class="ml-2 text-gray-900">2020年6月</span>
+            </div>
+            
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="text-gray-500">地址：</span>
+                <span class="ml-2 text-gray-900 flex-1">安徽省合肥市高新区创新大道128号</span>
+            </div>
+            
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span class="text-gray-500">人员规模：</span>
+                <span class="ml-2 text-gray-900">356人</span>
+            </div>
+            
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <div class="flex-1">
+                    <span class="text-gray-500">战略定位：</span>
+                    <p class="mt-1 text-gray-900">打造国际一流的人工智能技术创新平台，推动AI技术在各行业的深度融合与创新发展，培育具有国际竞争力的人工智能产业集群。</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                </svg>
+                <div class="flex-1">
+                    <span class="text-gray-500">发展愿景：</span>
+                    <p class="mt-1 text-gray-900">成为全球领先的人工智能技术创新中心，引领AI技术发展方向，为国家科技创新和产业升级提供强有力支撑。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 组织架构 -->
+    <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+            组织架构
+        </h3>
+        
+        <!-- 院长 -->
+        <div class="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+            <div class="flex items-center mb-2">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                    张
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-gray-900">张明华</h4>
+                    <p class="text-xs text-gray-600">院长 / 首席科学家</p>
+                </div>
+            </div>
+            <p class="text-xs text-gray-700 leading-relaxed">中国科学院院士，人工智能领域专家，主要研究方向为机器学习、计算机视觉、自然语言处理。</p>
+        </div>
+        
+        <!-- 核心成员 -->
+        <div class="space-y-3">
+            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
+                    李
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-medium text-gray-900">李建国</h4>
+                        <span class="text-xs text-gray-500">副院长</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-1">研究领域：深度学习、神经网络</p>
+                    <p class="text-xs text-gray-500">负责技术研发和项目管理工作</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
+                    王
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-medium text-gray-900">王晓芳</h4>
+                        <span class="text-xs text-gray-500">副院长</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-1">研究领域：计算机视觉、图像识别</p>
+                    <p class="text-xs text-gray-500">负责产学研合作和成果转化</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
+                    陈
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-medium text-gray-900">陈伟</h4>
+                        <span class="text-xs text-gray-500">技术总监</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-1">研究领域：自然语言处理、知识图谱</p>
+                    <p class="text-xs text-gray-500">负责核心技术攻关和团队建设</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">
+                    刘
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-medium text-gray-900">刘洋</h4>
+                        <span class="text-xs text-gray-500">研发主管</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-1">研究领域：强化学习、智能决策</p>
+                    <p class="text-xs text-gray-500">负责算法研发和模型优化</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 科研成果 -->
+    <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            科研成果
+        </h3>
+        
+        <div class="space-y-3">
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">多模态大模型技术研究与应用</h4>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded whitespace-nowrap ml-2">核心技术</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    研发了具有自主知识产权的多模态大模型，支持文本、图像、语音等多种模态的理解和生成，在多个行业场景中实现应用落地。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">深度学习</span>
+                    <span class="px-2 py-0.5 bg-green-50 text-green-600 text-xs rounded">多模态</span>
+                </div>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">智能制造视觉检测系统</h4>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded whitespace-nowrap ml-2">产业化</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    基于计算机视觉技术开发的智能检测系统，可实现产品缺陷的自动识别和分类，检测准确率达99.5%以上，已在多家制造企业应用。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">计算机视觉</span>
+                    <span class="px-2 py-0.5 bg-orange-50 text-orange-600 text-xs rounded">质量检测</span>
+                </div>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">智能客服对话系统</h4>
+                    <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded whitespace-nowrap ml-2">商业化</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    基于自然语言处理技术的智能客服系统，支持多轮对话、意图识别、情感分析等功能，已服务超过100家企业客户。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">NLP</span>
+                    <span class="px-2 py-0.5 bg-pink-50 text-pink-600 text-xs rounded">对话系统</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专利 -->
+    <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            专利成果
+        </h3>
+        
+        <div class="space-y-3">
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">一种基于深度学习的图像识别方法</h4>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded whitespace-nowrap ml-2">发明专利</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    专利号：ZL202010123456.7 | 授权时间：2023年3月
+                </p>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    提出了一种新型的图像识别算法，通过多尺度特征融合和注意力机制，显著提升了识别准确率和速度。
+                </p>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">智能对话系统及其实现方法</h4>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded whitespace-nowrap ml-2">发明专利</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    专利号：ZL202110234567.8 | 授权时间：2023年8月
+                </p>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    设计了一种基于预训练语言模型的智能对话系统，支持多轮对话和上下文理解，提升了对话的自然度和准确性。
+                </p>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">多模态数据融合处理装置</h4>
+                    <span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded whitespace-nowrap ml-2">实用新型</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    专利号：ZL202220345678.9 | 授权时间：2024年1月
+                </p>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                    开发了一种多模态数据融合处理装置，可同时处理文本、图像、语音等多种类型的数据，提高了数据处理效率。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 合作信息 -->
+    <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            合作单位
+        </h3>
+        
+        <div class="space-y-3">
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">中国科学技术大学</h4>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded whitespace-nowrap ml-2">高校合作</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    共建人工智能联合实验室，开展前沿技术研究和人才培养，已联合培养博士研究生50余名。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">产学研合作</span>
+                    <span class="px-2 py-0.5 bg-green-50 text-green-600 text-xs rounded">人才培养</span>
+                </div>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">科大讯飞股份有限公司</h4>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded whitespace-nowrap ml-2">企业合作</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    在语音识别、自然语言处理等领域开展深度合作，共同推动AI技术在教育、医疗等行业的应用。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded">技术合作</span>
+                    <span class="px-2 py-0.5 bg-orange-50 text-orange-600 text-xs rounded">成果转化</span>
+                </div>
+            </div>
+            
+            <div class="p-3 border border-gray-200 rounded-lg">
+                <div class="flex items-start justify-between mb-2">
+                    <h4 class="font-medium text-gray-900 flex-1">华为技术有限公司</h4>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded whitespace-nowrap ml-2">企业合作</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed mb-2">
+                    在AI芯片、边缘计算等领域开展联合研发，共同打造面向行业的AI解决方案。
+                </p>
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded">联合研发</span>
+                    <span class="px-2 py-0.5 bg-pink-50 text-pink-600 text-xs rounded">产业应用</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 附件 -->
+    <div class="bg-white mx-4 mt-3 mb-6 rounded-xl p-4 shadow-sm">
+        <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+            <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+            </svg>
+            相关附件
+        </h3>
+        
+        <div class="space-y-2">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center flex-1">
+                    <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">平台简介.pdf</p>
+                        <p class="text-xs text-gray-500">2.5 MB</p>
+                    </div>
+                </div>
+                <button onclick="downloadFile('平台简介.pdf')" class="text-blue-600 text-sm">下载</button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center flex-1">
+                    <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">科研成果汇编.pdf</p>
+                        <p class="text-xs text-gray-500">5.8 MB</p>
+                    </div>
+                </div>
+                <button onclick="downloadFile('科研成果汇编.pdf')" class="text-blue-600 text-sm">下载</button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center flex-1">
+                    <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">合作手册.pdf</p>
+                        <p class="text-xs text-gray-500">1.2 MB</p>
+                    </div>
+                </div>
+                <button onclick="downloadFile('合作手册.pdf')" class="text-blue-600 text-sm">下载</button>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex items-center flex-1">
+                    <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900">组织架构图.png</p>
+                        <p class="text-xs text-gray-500">856 KB</p>
+                    </div>
+                </div>
+                <button onclick="previewFile('组织架构图.png')" class="text-blue-600 text-sm mr-2">预览</button>
+                <button onclick="downloadFile('组织架构图.png')" class="text-blue-600 text-sm">下载</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const platformId = urlParams.get('id') || 1;
+
+        function goBack() {
+            window.location.href = 'resources.html';
+        }
+
+        function sharePlatform() {
+            alert('分享平台功能');
+        }
+
+        function downloadFile(filename) {
+            alert('下载文件：' + filename);
+        }
+
+        function previewFile(filename) {
+            alert('预览文件：' + filename);
+        }
+    </script>
+</body>
+</html>
+

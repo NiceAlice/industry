@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业节点企业列表 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900" id="pageTitle">支持系统</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 统计信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">企业总数</p>
+                    <p class="text-2xl font-bold text-blue-600" id="totalCount">28</p>
+                </div>
+                <button onclick="exportData()" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 active:bg-blue-800 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    导出
+                </button>
+            </div>
+        </div>
+
+        <!-- 企业列表 -->
+        <div class="bg-white" id="enterpriseList">
+            <!-- 企业列表将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        let nodeName = '';
+        
+        // 模拟企业数据
+        const enterprisesData = [
+            { id: 1, name: '福建龙净环保股份有限公司', legalPerson: '张明', registeredCapital: '50000', foundDate: '2008-03-15' },
+            { id: 2, name: '合肥阳光电源股份有限公司', legalPerson: '曹仁贤', registeredCapital: '45000', foundDate: '2010-05-20' },
+            { id: 3, name: '科大讯飞股份有限公司', legalPerson: '刘庆峰', registeredCapital: '38000', foundDate: '2009-08-12' },
+            { id: 4, name: '宁德时代新能源科技股份有限公司', legalPerson: '曾毓群', registeredCapital: '120000', foundDate: '2011-12-16' },
+            { id: 5, name: '比亚迪股份有限公司', legalPerson: '王传福', registeredCapital: '95000', foundDate: '2005-06-10' },
+            { id: 6, name: '隆基绿能科技股份有限公司', legalPerson: '李振国', registeredCapital: '68000', foundDate: '2012-03-25' },
+            { id: 7, name: '天合光能股份有限公司', legalPerson: '高纪凡', registeredCapital: '52000', foundDate: '2008-09-18' },
+            { id: 8, name: '晶科能源股份有限公司', legalPerson: '李仙德', registeredCapital: '48000', foundDate: '2009-11-22' },
+            { id: 9, name: '阳光电源股份有限公司', legalPerson: '曹仁贤', registeredCapital: '42000', foundDate: '2010-07-08' },
+            { id: 10, name: '协鑫集成科技股份有限公司', legalPerson: '朱共山', registeredCapital: '38000', foundDate: '2011-04-15' },
+            { id: 11, name: '东方日升新能源股份有限公司', legalPerson: '王洪', registeredCapital: '35000', foundDate: '2012-08-20' },
+            { id: 12, name: '亿纬锂能股份有限公司', legalPerson: '刘金成', registeredCapital: '32000', foundDate: '2013-02-10' },
+            { id: 13, name: '欣旺达电子股份有限公司', legalPerson: '王明旺', registeredCapital: '28000', foundDate: '2014-05-18' },
+            { id: 14, name: '国轩高科股份有限公司', legalPerson: '李缜', registeredCapital: '26000', foundDate: '2015-09-25' },
+            { id: 15, name: '中创新航科技股份有限公司', legalPerson: '刘静瑜', registeredCapital: '24000', foundDate: '2016-03-12' },
+            { id: 16, name: '蜂巢能源科技股份有限公司', legalPerson: '杨红新', registeredCapital: '22000', foundDate: '2017-07-08' },
+            { id: 17, name: '孚能科技股份有限公司', legalPerson: '王瑀', registeredCapital: '20000', foundDate: '2018-11-15' },
+            { id: 18, name: '瑞浦兰钧能源股份有限公司', legalPerson: '曹辉', registeredCapital: '18000', foundDate: '2019-04-22' },
+            { id: 19, name: '远景动力科技有限公司', legalPerson: '张雷', registeredCapital: '16000', foundDate: '2020-08-10' },
+            { id: 20, name: '力神电池股份有限公司', legalPerson: '秦兴才', registeredCapital: '15000', foundDate: '2021-02-05' },
+            { id: 21, name: '多氟多新材料股份有限公司', legalPerson: '李世江', registeredCapital: '14000', foundDate: '2008-06-18' },
+            { id: 22, name: '天赐材料股份有限公司', legalPerson: '徐金富', registeredCapital: '13000', foundDate: '2009-10-25' },
+            { id: 23, name: '新宙邦科技股份有限公司', legalPerson: '覃九三', registeredCapital: '12000', foundDate: '2010-12-12' },
+            { id: 24, name: '恩捷股份有限公司', legalPerson: '李晓明', registeredCapital: '11000', foundDate: '2011-08-08' },
+            { id: 25, name: '星源材质科技股份有限公司', legalPerson: '陈秀峰', registeredCapital: '10000', foundDate: '2012-04-20' },
+            { id: 26, name: '璞泰来新能源科技股份有限公司', legalPerson: '梁丰', registeredCapital: '9500', foundDate: '2013-09-15' },
+            { id: 27, name: '杉杉股份有限公司', legalPerson: '郑永刚', registeredCapital: '9000', foundDate: '2014-11-28' },
+            { id: 28, name: '当升科技股份有限公司', legalPerson: '李建忠', registeredCapital: '8500', foundDate: '2015-07-10' }
+        ];
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            nodeName = decodeURIComponent(urlParams.get('node')) || '支持系统';
+
+            // 设置页面标题
+            document.getElementById('pageTitle').textContent = nodeName;
+            document.getElementById('totalCount').textContent = enterprisesData.length;
+
+            // 渲染企业列表
+            renderEnterpriseList();
+        }
+
+        function renderEnterpriseList() {
+            const html = enterprisesData.map((enterprise, index) => `
+                <div class="px-4 py-3 ${index < enterprisesData.length - 1 ? 'border-b border-gray-100' : ''} active:bg-gray-50 cursor-pointer" onclick="viewEnterprise(${enterprise.id})">
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded flex items-center justify-center mr-3 flex-shrink-0">
+                            <span class="text-base font-bold text-white">${enterprise.name.substring(0, 2)}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-gray-900 mb-1 truncate">${enterprise.name}</h3>
+                            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                                <div class="flex items-center">
+                                    <span class="text-gray-500 mr-1">法人：</span>
+                                    <span class="font-medium">${enterprise.legalPerson}</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="text-gray-500 mr-1">注册资金：</span>
+                                    <span class="font-medium">${enterprise.registeredCapital}万</span>
+                                </div>
+                                <div class="flex items-center col-span-2">
+                                    <span class="text-gray-500 mr-1">成立时间：</span>
+                                    <span class="font-medium">${enterprise.foundDate}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('enterpriseList').innerHTML = html;
+        }
+
+        function viewEnterprise(id) {
+            window.location.href = `enterprise-detail.html?id=${id}`;
+        }
+
+        function exportData() {
+            alert(`导出 ${nodeName} 节点的 ${enterprisesData.length} 家企业数据`);
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

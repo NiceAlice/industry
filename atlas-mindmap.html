@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业链图谱 - 思维导图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 AntV G6 -->
+    <script src="https://unpkg.com/@antv/g6@4.8.24/dist/g6.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+
+        /* 思维导图容器 */
+        #mindmapContainer {
+            width: 100%;
+            height: calc(100vh - 120px);
+            background: #f8fafc;
+        }
+
+        /* 工具栏 */
+        .toolbar {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .toolbar-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toolbar-btn:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .toolbar-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">产业链图谱</h1>
+        </div>
+    </div>
+
+    <!-- 产业链选择 -->
+    <div class="bg-white px-4 py-3 border-b">
+        <div class="flex items-center space-x-2 overflow-x-auto">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-full text-sm whitespace-nowrap" onclick="selectChain('biomedical')">生物医药</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('new-energy')">新能源</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('smart-manufacturing')">智能制造</button>
+            <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm whitespace-nowrap" onclick="selectChain('electronics')">电子信息</button>
+        </div>
+    </div>
+
+    <!-- 思维导图容器 -->
+    <div id="mindmapContainer"></div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <div class="toolbar-btn" onclick="fitView()" title="适应画布">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+            </svg>
+        </div>
+        <div class="toolbar-btn" onclick="zoomIn()" title="放大">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+        </div>
+        <div class="toolbar-btn" onclick="zoomOut()" title="缩小">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+            </svg>
+        </div>
+        <div class="toolbar-btn" onclick="resetZoom()" title="重置">
+            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        let graph;
+        let currentChain = 'biomedical';
+
+        // 生物医药产业链数据（G6 树形结构）
+        const biomedicalData = {
+            id: 'root',
+            label: '生物医药',
+            count: 523,
+            children: [
+                {
+                    id: 'medicine',
+                    label: '药品',
+                    children: [
+                        { id: 'bio-medicine', label: '生物药', count: 523 },
+                        { id: 'chemical-medicine', label: '化学药', count: 523 },
+                        { id: 'chinese-medicine', label: '中药', count: 523 }
+                    ]
+                },
+                {
+                    id: 'equipment',
+                    label: '关键装备与原辅料',
+                    children: [
+                        { id: 'radiotherapy', label: '放疗器械', count: 523 },
+                        { id: 'diagnosis', label: '体外诊断', count: 523 },
+                        { id: 'imaging', label: '医学影像', count: 523, highlight: true },
+                        { id: 'consumables', label: '高值耗材', count: 523 },
+                        { id: 'transfusion', label: '输血/透析', count: 523, highlight: true },
+                        { id: 'rehabilitation', label: '康复器械', count: 523 }
+                    ]
+                }
+            ]
+        };
+
+        // 新能源产业链数据
+        const newEnergyData = {
+            id: 'root',
+            label: '新能源',
+            count: 856,
+            children: [
+                {
+                    id: 'upstream',
+                    label: '上游',
+                    children: [
+                        { id: 'lithium', label: '锂矿开采', count: 45 },
+                        { id: 'materials', label: '正负极材料', count: 68 },
+                        { id: 'separator', label: '隔膜材料', count: 52 }
+                    ]
+                },
+                {
+                    id: 'midstream',
+                    label: '中游',
+                    children: [
+                        { id: 'battery', label: '动力电池', count: 128, highlight: true },
+                        { id: 'motor', label: '电机电控', count: 95 },
+                        { id: 'vehicle', label: '整车制造', count: 38, highlight: true }
+                    ]
+                },
+                {
+                    id: 'downstream',
+                    label: '下游',
+                    children: [
+                        { id: 'charging', label: '充电设施', count: 142 },
+                        { id: 'sales', label: '销售渠道', count: 256 }
+                    ]
+                }
+            ]
+        };
+
+        // 注册自定义节点
+        G6.registerNode('mindmap-node', {
+            draw(cfg, group) {
+                const isRoot = cfg.id === 'root';
+                const isLevel1 = cfg.depth === 1;
+                const isLevel2 = cfg.depth === 2;
+                const hasCount = cfg.count !== undefined;
+                const isHighlight = cfg.highlight;
+
+                // 节点宽度和高度
+                let width = 120;
+                let height = 40;
+                let fontSize = 14;
+                let fontWeight = 'normal';
+
+                // 根据层级设置样式
+                if (isRoot) {
+                    width = 140;
+                    height = 50;
+                    fontSize = 18;
+                    fontWeight = 'bold';
+                } else if (isLevel1) {
+                    width = 140;
+                    height = 45;
+                    fontSize = 15;
+                    fontWeight = '600';
+                }
+
+                // 背景颜色
+                let fillColor = '#ffffff';
+                let strokeColor = '#5B8FF9';
+                let textColor = '#000000';
+
+                if (isRoot) {
+                    fillColor = '#5B8FF9';
+                    strokeColor = '#5B8FF9';
+                    textColor = '#ffffff';
+                } else if (isLevel1) {
+                    fillColor = '#91d5ff';
+                    strokeColor = '#40a9ff';
+                    textColor = '#ffffff';
+                } else if (isHighlight) {
+                    fillColor = '#fff1f0';
+                    strokeColor = '#ff7875';
+                    textColor = '#cf1322';
+                } else {
+                    fillColor = '#f0f5ff';
+                    strokeColor = '#adc6ff';
+                    textColor = '#1d39c4';
+                }
+
+                // 绘制矩形背景
+                const rect = group.addShape('rect', {
+                    attrs: {
+                        x: -width / 2,
+                        y: -height / 2,
+                        width: width,
+                        height: height,
+                        radius: 8,
+                        fill: fillColor,
+                        stroke: strokeColor,
+                        lineWidth: 2,
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 2,
+                    },
+                    name: 'rect-shape',
+                });
+
+                // 绘制文本
+                let labelText = cfg.label;
+                if (hasCount && !isRoot && !isLevel1) {
+                    labelText = `${cfg.label} (${cfg.count})`;
+                }
+
+                group.addShape('text', {
+                    attrs: {
+                        text: labelText,
+                        x: 0,
+                        y: 0,
+                        textAlign: 'center',
+                        textBaseline: 'middle',
+                        fill: textColor,
+                        fontSize: fontSize,
+                        fontWeight: fontWeight,
+                    },
+                    name: 'text-shape',
+                });
+
+                return rect;
+            },
+
+            update: undefined,
+        });
+
+        // 注册自定义边（左右布局优化）
+        G6.registerEdge('mindmap-edge', {
+            draw(cfg, group) {
+                const startPoint = cfg.startPoint;
+                const endPoint = cfg.endPoint;
+
+                // 使用水平贝塞尔曲线，适合左右布局
+                const hgap = Math.abs(endPoint.x - startPoint.x);
+
+                const path = [
+                    ['M', startPoint.x, startPoint.y],
+                    [
+                        'C',
+                        startPoint.x + hgap / 2,
+                        startPoint.y,
+                        endPoint.x - hgap / 2,
+                        endPoint.y,
+                        endPoint.x,
+                        endPoint.y,
+                    ],
+                ];
+
+                const shape = group.addShape('path', {
+                    attrs: {
+                        path: path,
+                        stroke: '#91d5ff',
+                        lineWidth: 2,
+                        endArrow: false,
+                    },
+                    name: 'path-shape',
+                });
+
+                return shape;
+            },
+        });
+
+        function goBack() {
+            window.location.href = 'atlas.html';
+        }
+
+        function selectChain(chain) {
+            currentChain = chain;
+            const buttons = document.querySelectorAll('.bg-blue-600, .bg-gray-100');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.add('bg-blue-600', 'text-white');
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+
+            renderMindMap();
+        }
+
+        function renderMindMap() {
+            const data = currentChain === 'biomedical' ? biomedicalData : newEnergyData;
+
+            // 如果图表已存在，先销毁
+            if (graph) {
+                graph.destroy();
+            }
+
+            const container = document.getElementById('mindmapContainer');
+            const width = container.scrollWidth;
+            const height = container.scrollHeight || 600;
+
+            // 创建 G6 图实例
+            graph = new G6.TreeGraph({
+                container: 'mindmapContainer',
+                width,
+                height,
+                modes: {
+                    default: [
+                        {
+                            type: 'collapse-expand',
+                            onChange: function onChange(item, collapsed) {
+                                const data = item.getModel();
+                                data.collapsed = collapsed;
+                                return true;
+                            },
+                        },
+                        'drag-canvas',
+                        'zoom-canvas',
+                    ],
+                },
+                defaultNode: {
+                    type: 'mindmap-node',
+                    anchorPoints: [
+                        [0, 0.5],   // 左侧中点
+                        [1, 0.5],   // 右侧中点
+                    ],
+                },
+                defaultEdge: {
+                    type: 'mindmap-edge',
+                },
+                layout: {
+                    type: 'compactBox',
+                    direction: 'LR',  // 从左到右
+                    getId: function getId(d) {
+                        return d.id;
+                    },
+                    getHeight: function getHeight() {
+                        return 16;
+                    },
+                    getWidth: function getWidth(node) {
+                        if (node.id === 'root') {
+                            return 140;
+                        } else if (node.depth === 1) {
+                            return 140;
+                        }
+                        return 120;
+                    },
+                    getVGap: function getVGap() {
+                        return 20;
+                    },
+                    getHGap: function getHGap() {
+                        return 80;
+                    },
+                },
+                fitView: true,
+                fitViewPadding: [40, 100, 40, 60],  // 上、右、下、左
+            });
+
+            // 加载数据
+            graph.data(data);
+            graph.render();
+
+            // 监听节点点击事件
+            graph.on('node:click', (e) => {
+                const item = e.item;
+                const nodeModel = item.getModel();
+                showNodeDetail(nodeModel.label);
+            });
+
+            // 自适应窗口大小
+            window.onresize = () => {
+                if (!graph || graph.get('destroyed')) return;
+                if (!container || !container.scrollWidth || !container.scrollHeight) return;
+                graph.changeSize(container.scrollWidth, container.scrollHeight);
+            };
+        }
+
+        function showNodeDetail(nodeName) {
+            // 跳转到节点详情页面或显示详情
+            alert(`查看节点详情：${nodeName}`);
+        }
+
+        function fitView() {
+            if (graph) {
+                graph.fitView();
+            }
+        }
+
+        function zoomIn() {
+            if (graph) {
+                const currentZoom = graph.getZoom();
+                const newZoom = currentZoom * 1.2;
+                graph.zoomTo(newZoom);
+            }
+        }
+
+        function zoomOut() {
+            if (graph) {
+                const currentZoom = graph.getZoom();
+                const newZoom = currentZoom * 0.8;
+                graph.zoomTo(newZoom);
+            }
+        }
+
+        function resetZoom() {
+            if (graph) {
+                graph.zoomTo(1);
+                graph.fitCenter();
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = () => {
+            renderMindMap();
+        };
+    </script>
+</body>
+</html>
+

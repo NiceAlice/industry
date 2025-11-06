@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>企业云图 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .enterprise-node {
+            transition: all 0.2s;
+        }
+        .enterprise-node:active {
+            transform: scale(0.95);
+        }
+        .filter-btn {
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">企业云图</h1>
+            <button onclick="showSearch()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 筛选栏 -->
+    <div class="bg-white px-4 py-3 border-b sticky top-14 z-40">
+        <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">共找到 <span class="text-blue-600 font-semibold" id="totalCount">12,458</span> 家企业</span>
+            <button onclick="showFilterModal()" class="flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+                筛选
+                <span id="filterBadge" class="ml-1 px-1.5 py-0.5 bg-blue-600 text-white rounded-full text-xs hidden">0</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主内容区 - 企业列表 -->
+    <div class="pb-6" id="enterpriseList">
+        <!-- 企业列表将通过JavaScript动态生成 -->
+    </div>
+
+    <!-- 筛选弹框 -->
+    <div id="filterModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" onclick="closeFilterModal(event)">
+        <div class="absolute inset-x-0 bottom-0 bg-white rounded-t-3xl max-h-[85vh] overflow-hidden" onclick="event.stopPropagation()">
+            <!-- 弹框头部 -->
+            <div class="sticky top-0 bg-white border-b px-4 py-4 z-10">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-gray-800">筛选条件</h2>
+                    <button onclick="closeFilterModal()" class="text-gray-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 筛选内容 -->
+            <div class="overflow-y-auto px-4 py-4" style="max-height: calc(85vh - 140px);">
+                <!-- 企业标签 -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-800 mb-3">企业标签</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="上市" onclick="toggleFilter(this)">上市</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="链主" onclick="toggleFilter(this)">链主</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="高企" onclick="toggleFilter(this)">高企</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="专精特新" onclick="toggleFilter(this)">专精特新</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="独角兽" onclick="toggleFilter(this)">独角兽</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="tag" data-value="瞪羚" onclick="toggleFilter(this)">瞪羚</button>
+                    </div>
+                </div>
+
+                <!-- 产业类型 -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-800 mb-3">产业类型</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="智能机器人" onclick="toggleFilter(this)">智能机器人</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="低空经济" onclick="toggleFilter(this)">低空经济</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="人工智能" onclick="toggleFilter(this)">人工智能</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="新能源" onclick="toggleFilter(this)">新能源</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="生物医药" onclick="toggleFilter(this)">生物医药</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="新材料" onclick="toggleFilter(this)">新材料</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="industry" data-value="电子信息" onclick="toggleFilter(this)">电子信息</button>
+                    </div>
+                </div>
+
+                <!-- 区域 -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-semibold text-gray-800 mb-3">区域</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="瑶海区" onclick="toggleFilter(this)">瑶海区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="高新区" onclick="toggleFilter(this)">高新区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="包河区" onclick="toggleFilter(this)">包河区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="蜀山区" onclick="toggleFilter(this)">蜀山区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="庐阳区" onclick="toggleFilter(this)">庐阳区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="经开区" onclick="toggleFilter(this)">经开区</button>
+                        <button class="filter-tag px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm" data-type="region" data-value="新站区" onclick="toggleFilter(this)">新站区</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部按钮 -->
+            <div class="sticky bottom-0 bg-white border-t px-4 py-3 flex items-center space-x-3">
+                <button onclick="resetFilter()" class="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold">
+                    重置
+                </button>
+                <button onclick="applyFilter()" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 企业数据
+        const enterprises = [
+            { id: 1, name: '华能新能源科技集团', status: '注销', foundDate: '2008-03-15', address: '高新区创新大道1号', industry: '新能源', tags: ['上市', '链主', '高企'] },
+            { id: 2, name: '智造未来机器人有限公司', status: '存续', foundDate: '2015-06-20', address: '经开区智能制造园', industry: '智能机器人', tags: ['独角兽', '专精特新'] },
+            { id: 3, name: '绿能环保科技股份', status: '存续', foundDate: '2012-09-08', address: '包河区环保产业园', industry: '新能源', tags: ['上市', '高企'] },
+            { id: 4, name: '芯片半导体科技', status: '存续', foundDate: '2010-11-12', address: '高新区微电子园', industry: '电子信息', tags: ['上市', '高企'] },
+            { id: 5, name: '医药生物研发中心', status: '存续', foundDate: '2013-04-25', address: '蜀山区生物医药园', industry: '生物医药', tags: ['上市', '高企'] },
+            { id: 6, name: '云计算服务有限公司', status: '存续', foundDate: '2016-07-30', address: '高新区软件园', industry: '人工智能', tags: ['上市', '高企'] },
+            { id: 7, name: '智能算法科技', status: '存续', foundDate: '2017-02-14', address: '瑶海区科技园', industry: '人工智能', tags: ['高企', '专精特新'] },
+            { id: 8, name: '新材料研发中心', status: '存续', foundDate: '2011-05-18', address: '庐阳区新材料园', industry: '新材料', tags: ['高企', '专精特新'] },
+            { id: 9, name: '光电技术股份公司', status: '存续', foundDate: '2014-08-22', address: '新站区光电园', industry: '电子信息', tags: ['高企', '瞪羚'] },
+            { id: 10, name: '低空飞行器制造', status: '存续', foundDate: '2018-01-10', address: '经开区航空产业园', industry: '低空经济', tags: ['专精特新', '瞪羚'] },
+            { id: 11, name: '智能驾驶科技', status: '存续', foundDate: '2019-03-05', address: '高新区智能网联园', industry: '人工智能', tags: ['独角兽', '高企'] },
+            { id: 12, name: '新能源汽车动力', status: '存续', foundDate: '2009-12-20', address: '包河区汽车产业园', industry: '新能源', tags: ['链主', '上市', '高企'] },
+            { id: 13, name: '工业机器人制造', status: '存续', foundDate: '2016-09-15', address: '经开区机器人园', industry: '智能机器人', tags: ['专精特新', '高企'] },
+            { id: 14, name: '生物制药研究院', status: '存续', foundDate: '2012-06-08', address: '蜀山区医药园', industry: '生物医药', tags: ['高企', '专精特新'] },
+            { id: 15, name: '无人机系统集成', status: '存续', foundDate: '2017-11-25', address: '新站区无人机基地', industry: '低空经济', tags: ['瞪羚', '高企'] },
+            { id: 16, name: '量子通信技术', status: '存续', foundDate: '2015-04-12', address: '高新区量子园', industry: '电子信息', tags: ['链主', '高企'] },
+            { id: 17, name: '碳纤维新材料', status: '存续', foundDate: '2013-07-30', address: '庐阳区复合材料园', industry: '新材料', tags: ['专精特新', '高企'] },
+            { id: 18, name: '智能传感器制造', status: '存续', foundDate: '2018-05-20', address: '瑶海区传感器园', industry: '电子信息', tags: ['高企', '瞪羚'] },
+            { id: 19, name: '飞行汽车研发', status: '存续', foundDate: '2020-02-15', address: '经开区未来交通园', industry: '低空经济', tags: ['独角兽'] },
+            { id: 20, name: '协作机器人科技', status: '存续', foundDate: '2016-10-08', address: '高新区机器人谷', industry: '智能机器人', tags: ['专精特新', '高企'] }
+        ];
+
+        // 筛选条件
+        let filterConditions = {
+            tags: [],
+            industry: [],
+            region: []
+        };
+
+        // 初始化页面
+        function init() {
+            renderEnterpriseList(enterprises);
+        }
+
+        // 渲染企业列表
+        function renderEnterpriseList(data) {
+            const container = document.getElementById('enterpriseList');
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20">
+                        <svg class="w-20 h-20 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <p class="text-gray-500 text-sm">暂无符合条件的企业</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="mx-4 mt-4 space-y-3">';
+            data.forEach(enterprise => {
+                const tagColors = {
+                    '上市': 'bg-red-100 text-red-600',
+                    '链主': 'bg-orange-100 text-orange-600',
+                    '高企': 'bg-blue-100 text-blue-600',
+                    '专精特新': 'bg-green-100 text-green-600',
+                    '独角兽': 'bg-purple-100 text-purple-600',
+                    '瞪羚': 'bg-pink-100 text-pink-600'
+                };
+
+                const tagsHtml = enterprise.tags.map(tag =>
+                    `<span class="px-2 py-0.5 ${tagColors[tag] || 'bg-gray-100 text-gray-600'} text-xs rounded">${tag}</span>`
+                ).join('');
+
+                html += `
+                    <div class="enterprise-node bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500" onclick="showEnterpriseDetail(${enterprise.id})">
+                        <div class="flex items-start justify-between mb-2">
+                            <h3 class="text-base font-bold text-gray-800 flex-1">${enterprise.name}</h3>
+                            <span class="px-2 py-1 ${enterprise.status === '存续' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'} text-xs rounded ml-2">${enterprise.status}</span>
+                        </div>
+                        <div class="space-y-1.5 text-xs text-gray-600 mb-3">
+                            <div class="flex items-center">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>成立时间：${enterprise.foundDate}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span>地址：${enterprise.address}</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <span>产业类型：${enterprise.industry}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center flex-wrap gap-1.5">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+            // 更新企业数量
+            document.getElementById('totalCount').textContent = data.length.toLocaleString();
+        }
+
+        // 返回首页
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // 显示搜索
+        function showSearch() {
+            alert('打开企业搜索功能');
+        }
+
+        // 显示筛选弹框
+        function showFilterModal() {
+            document.getElementById('filterModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭筛选弹框
+        function closeFilterModal(event) {
+            if (event && event.target.id !== 'filterModal') return;
+            document.getElementById('filterModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 切换筛选项
+        function toggleFilter(button) {
+            const type = button.dataset.type;
+            const value = button.dataset.value;
+
+            if (button.classList.contains('bg-blue-600')) {
+                // 取消选中
+                button.classList.remove('bg-blue-600', 'text-white');
+                button.classList.add('bg-gray-100', 'text-gray-700');
+
+                const index = filterConditions[type].indexOf(value);
+                if (index > -1) {
+                    filterConditions[type].splice(index, 1);
+                }
+            } else {
+                // 选中
+                button.classList.remove('bg-gray-100', 'text-gray-700');
+                button.classList.add('bg-blue-600', 'text-white');
+
+                if (!filterConditions[type].includes(value)) {
+                    filterConditions[type].push(value);
+                }
+            }
+        }
+
+        // 重置筛选
+        function resetFilter() {
+            filterConditions = {
+                tags: [],
+                industry: [],
+                region: []
+            };
+
+            // 重置所有按钮状态
+            document.querySelectorAll('.filter-tag').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+        }
+
+        // 应用筛选
+        function applyFilter() {
+            let filtered = enterprises;
+
+            // 按标签筛选
+            if (filterConditions.tags.length > 0) {
+                filtered = filtered.filter(e =>
+                    filterConditions.tags.some(tag => e.tags.includes(tag))
+                );
+            }
+
+            // 按产业类型筛选
+            if (filterConditions.industry.length > 0) {
+                filtered = filtered.filter(e =>
+                    filterConditions.industry.includes(e.industry)
+                );
+            }
+
+            // 按区域筛选
+            if (filterConditions.region.length > 0) {
+                filtered = filtered.filter(e =>
+                    filterConditions.region.some(region => e.address.includes(region))
+                );
+            }
+
+            // 更新筛选徽章
+            const totalFilters = filterConditions.tags.length + filterConditions.industry.length + filterConditions.region.length;
+            const badge = document.getElementById('filterBadge');
+            if (totalFilters > 0) {
+                badge.textContent = totalFilters;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            renderEnterpriseList(filtered);
+            closeFilterModal();
+        }
+
+        // 显示企业详情
+        function showEnterpriseDetail(id) {
+            // 跳转到企业详情页面
+            window.location.href = `enterprise-detail.html?id=${id}`;
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>

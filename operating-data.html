@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>经营数据 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .tab-item {
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 6px;
+        }
+        .tab-item.active {
+            background-color: #1E88E5;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">经营数据</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 企业信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold text-blue-600" id="companyInitial">福</span>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-base font-bold text-gray-900" id="companyName">福建龙净环保股份有限公司</h2>
+                    <p class="text-xs text-gray-500 mt-1">近4年经营数据分析</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 营业数据 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">营业数据</h3>
+                <div class="flex items-center space-x-2">
+                    <button class="tab-item active text-xs" onclick="switchRevenueTab('year')" id="revenueYearTab">年度</button>
+                    <button class="tab-item text-xs text-gray-600" onclick="switchRevenueTab('quarter')" id="revenueQuarterTab">季度</button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 税收数据 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">税收数据</h3>
+                <div class="flex items-center space-x-2">
+                    <button class="tab-item active text-xs" onclick="switchTaxTab('year')" id="taxYearTab">年度</button>
+                    <button class="tab-item text-xs text-gray-600" onclick="switchTaxTab('month')" id="taxMonthTab">月度</button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="taxChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 研发费用 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">研发费用</h3>
+                <span class="text-xs text-gray-500">近4年趋势</span>
+            </div>
+            <div class="h-64">
+                <canvas id="rdChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 社保缴纳 -->
+        <div class="bg-white px-4 py-4 mb-2">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-gray-900">社保缴纳</h3>
+                <span class="text-xs text-gray-500">近4年数据</span>
+            </div>
+            <div class="h-64">
+                <canvas id="socialSecurityChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEnterprise = null;
+        let revenueChart = null;
+        let taxChart = null;
+        let rdChart = null;
+        let socialSecurityChart = null;
+
+        // 模拟企业数据
+        const enterprises = [
+            { id: 1, name: '福建龙净环保股份有限公司', industry: '新能源' },
+            { id: 2, name: '合肥阳光电源股份有限公司', industry: '新能源' },
+            { id: 3, name: '科大讯飞股份有限公司', industry: '人工智能' }
+        ];
+
+        // 模拟数据
+        const yearlyData = {
+            revenue: [65.2, 72.8, 78.5, 85.6],
+            cost: [48.5, 52.3, 56.2, 60.8],
+            profit: [8.2, 10.5, 12.8, 15.2],
+            tax: [9.8, 10.9, 11.8, 12.8],
+            rd: [5.2, 5.8, 6.3, 6.8],
+            socialAmount: [1.2, 1.4, 1.6, 1.8],
+            socialPeople: [2200, 2350, 2450, 2500]
+        };
+
+        const quarterlyData = {
+            revenue: [18.5, 20.2, 22.8, 24.1, 19.8, 21.5, 23.2, 25.1, 20.5, 22.1, 24.3, 26.4, 21.2, 23.5, 25.8, 27.9],
+            cost: [13.2, 14.5, 16.2, 17.4, 14.1, 15.3, 16.8, 18.2, 14.8, 16.1, 17.5, 19.1, 15.2, 16.8, 18.3, 19.9],
+            profit: [1.8, 2.1, 2.5, 2.8, 2.2, 2.6, 3.0, 3.4, 2.6, 3.1, 3.5, 3.9, 3.0, 3.6, 4.1, 4.5]
+        };
+
+        const monthlyTax = [0.95, 1.02, 1.08, 0.98, 1.05, 1.12, 1.01, 1.08, 1.15, 1.05, 1.12, 1.18];
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const enterpriseId = parseInt(urlParams.get('id')) || 1;
+
+            // 获取企业信息
+            currentEnterprise = enterprises.find(e => e.id === enterpriseId) || enterprises[0];
+
+            // 渲染企业信息
+            document.getElementById('companyName').textContent = currentEnterprise.name;
+            document.getElementById('companyInitial').textContent = currentEnterprise.name.substring(0, 1);
+
+            // 初始化图表
+            initRevenueChart('year');
+            initTaxChart('year');
+            initRdChart();
+            initSocialSecurityChart();
+        }
+
+        function initRevenueChart(type) {
+            const ctx = document.getElementById('revenueChart');
+            
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
+
+            const labels = type === 'year' 
+                ? ['2021年', '2022年', '2023年', '2024年']
+                : ['2021Q1', '2021Q2', '2021Q3', '2021Q4', '2022Q1', '2022Q2', '2022Q3', '2022Q4', 
+                   '2023Q1', '2023Q2', '2023Q3', '2023Q4', '2024Q1', '2024Q2', '2024Q3', '2024Q4'];
+            
+            const revenue = type === 'year' ? yearlyData.revenue : quarterlyData.revenue;
+            const cost = type === 'year' ? yearlyData.cost : quarterlyData.cost;
+            const profit = type === 'year' ? yearlyData.profit : quarterlyData.profit;
+
+            revenueChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '营业收入',
+                            data: revenue,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgb(59, 130, 246)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '营业成本',
+                            data: cost,
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderColor: 'rgb(239, 68, 68)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '利润总额',
+                            data: profit,
+                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                            borderColor: 'rgb(34, 197, 94)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '亿';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initTaxChart(type) {
+            const ctx = document.getElementById('taxChart');
+            
+            if (taxChart) {
+                taxChart.destroy();
+            }
+
+            const labels = type === 'year' 
+                ? ['2021年', '2022年', '2023年', '2024年']
+                : ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+            
+            const data = type === 'year' ? yearlyData.tax : monthlyTax;
+
+            taxChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '税收金额',
+                        data: data,
+                        backgroundColor: 'rgba(168, 85, 247, 0.8)',
+                        borderColor: 'rgb(168, 85, 247)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '亿';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initRdChart() {
+            const ctx = document.getElementById('rdChart');
+
+            rdChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2021年', '2022年', '2023年', '2024年'],
+                    datasets: [{
+                        label: '研发费用',
+                        data: yearlyData.rd,
+                        borderColor: 'rgb(249, 115, 22)',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '亿';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initSocialSecurityChart() {
+            const ctx = document.getElementById('socialSecurityChart');
+
+            socialSecurityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2021年', '2022年', '2023年', '2024年'],
+                    datasets: [
+                        {
+                            label: '缴纳总额',
+                            data: yearlyData.socialAmount,
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            yAxisID: 'y',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '缴纳人数',
+                            data: yearlyData.socialPeople,
+                            borderColor: 'rgb(34, 197, 94)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            yAxisID: 'y1',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '亿';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '人';
+                                },
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchRevenueTab(type) {
+            document.getElementById('revenueYearTab').classList.toggle('active', type === 'year');
+            document.getElementById('revenueYearTab').classList.toggle('text-gray-600', type !== 'year');
+            document.getElementById('revenueQuarterTab').classList.toggle('active', type === 'quarter');
+            document.getElementById('revenueQuarterTab').classList.toggle('text-gray-600', type !== 'quarter');
+            initRevenueChart(type);
+        }
+
+        function switchTaxTab(type) {
+            document.getElementById('taxYearTab').classList.toggle('active', type === 'year');
+            document.getElementById('taxYearTab').classList.toggle('text-gray-600', type !== 'year');
+            document.getElementById('taxMonthTab').classList.toggle('active', type === 'month');
+            document.getElementById('taxMonthTab').classList.toggle('text-gray-600', type !== 'month');
+            initTaxChart(type);
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

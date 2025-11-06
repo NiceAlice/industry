@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>企业详情 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .tab-item {
+            transition: all 0.3s;
+            padding-bottom: 4px;
+        }
+        .tab-item.active {
+            color: #1E88E5;
+            border-bottom: 3px solid #1E88E5;
+        }
+        /* 隐藏横向滚动条 */
+        .overflow-x-auto::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3 relative">
+            <button onclick="goBack()" class="p-1 absolute left-4">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <div class="flex items-center space-x-6 mx-auto">
+                <div class="tab-item active text-base font-semibold cursor-pointer" onclick="switchTab('enterprise')">企业详情</div>
+            </div>
+           
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-20 bg-gray-50" id="mainContent">
+        <!-- 企业头部信息 -->
+        <div class="bg-white px-4 pt-4 pb-3">
+            <div class="flex items-start mb-3">
+                <!-- 企业Logo -->
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23f0f0f0' width='60' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='%23666'%3ELogo%3C/text%3E%3C/svg%3E"
+                     class="w-14 h-14 rounded mr-3 flex-shrink-0" id="companyLogoImg" alt="企业Logo">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center mb-1.5">
+                        <h1 class="text-lg font-bold text-gray-900 leading-tight mr-2" id="companyName">福建龙净环保股份有限公司</h1>
+                        <span class="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded border border-blue-200 whitespace-nowrap flex-shrink-0" id="industryTag">新能源</span>
+                    </div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="text-xs text-blue-600 ">存续</span>
+                        <span class="text-xs text-gray-500" id="creditCode">91350000700537155</span>
+                    </div>
+                    <div class="flex items-center text-xs text-gray-500 mb-2">
+                        <svg class="w-6 h-6 text-blue-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span id="viewCount">安徽合肥高新区</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 企业标签行 -->
+            <div class="flex items-center overflow-x-auto pb-2 -mx-4 px-4" style="scrollbar-width: none; -ms-overflow-style: none;">
+                <div class="flex items-center space-x-2 flex-nowrap" id="companyTags">
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded whitespace-nowrap border border-blue-200">高企</span>
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded whitespace-nowrap border border-blue-200">上市</span>
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded whitespace-nowrap border border-blue-200">链主</span>
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded whitespace-nowrap border border-blue-200">羚羊</span>
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded whitespace-nowrap border border-blue-200">专精特新</span>
+                </div>
+            </div>
+        </div>
+
+       
+       
+
+      
+
+        <!-- 工商信息 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center mb-3">
+                <svg class="w-4 h-4 text-gray-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3 class="text-sm font-bold text-gray-900">工商信息</h3>
+            </div>
+            <div class="space-y-2.5" id="businessInfoList">
+                <!-- 工商信息将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 工商变更 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">工商变更</h3>
+                </div>
+                <button class="text-blue-600 text-xs flex items-center" onclick="viewMoreInfo('changes')">
+                    查看更多
+                    <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="overflow-x-auto -mx-4 px-4" style="scrollbar-width: none; -ms-overflow-style: none;" id="businessChangesList">
+                <!-- 工商变更将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 产业相关 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">产业相关</h3>
+                </div>
+            </div>
+            <div id="industryRelatedList">
+                <!-- 产业相关将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 经营信息 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">经营信息</h3>
+                </div>
+                <button class="text-blue-600 text-xs flex items-center" onclick="viewMoreInfo('business')">
+                    查看更多
+                    <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-3" id="operatingInfoGrid">
+                <!-- 经营信息将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 科技创新 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">科技创新</h3>
+                </div>
+                <button class="text-blue-600 text-xs flex items-center" onclick="viewIPStatistics()">
+                    查看更多
+                    <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="innovationContent">
+                <!-- 科技创新将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+         <!-- 风险信息 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-red-600 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">风险总量：</h3>
+                    <span class="text-xl font-bold text-red-600 ml-1">9999+</span>
+                </div>
+                 <button class="text-blue-600 text-xs flex items-center" onclick="viewRiskList()">
+                    查看更多
+                    <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+        
+            <div class="grid grid-cols-3 gap-2 text-xs">
+                <div class="border border-gray-200 rounded p-2">
+                    <div class="text-gray-600 mb-1.5 font-medium">高风险</div>
+                    <div class="text-red-600 font-bold text-base mb-1.5">385</div>
+                    
+                </div>
+                <div class="border border-gray-200 rounded p-2">
+                    <div class="text-gray-600 mb-1.5 font-medium">中风险</div>
+                    <div class="text-orange-600 font-bold text-base mb-1.5">668</div>
+                    
+                </div>
+                <div class="border border-gray-200 rounded p-2">
+                    <div class="text-gray-600 mb-1.5 font-medium">低风险</div>
+                    <div class="text-yellow-600 font-bold text-base mb-1.5">9261</div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- 股东信息 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">股东</h3>
+                    <span class="ml-2 text-xs text-gray-500">10</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto -mx-4 px-4" style="scrollbar-width: none; -ms-overflow-style: none;" id="shareholdersList">
+                <!-- 股东项将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 高管信息 -->
+        <div class="bg-white mt-2 px-4 py-3">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-600 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                    </svg>
+                    <h3 class="text-sm font-bold text-gray-900">高管</h3>
+                    <span class="ml-2 text-xs text-gray-500">15</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto -mx-4 px-4" style="scrollbar-width: none; -ms-overflow-style: none;" id="personnelList">
+                <!-- 人员项将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+       
+
+    </div>
+
+    
+
+    <script>
+        // 从URL获取企业ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const enterpriseId = urlParams.get('id');
+
+        // 企业数据（与enterprise.html保持一致）
+        const enterprises = [
+            { id: 1, name: '华能新能源科技集团', status: '正常', foundDate: '2008-03-15', address: '高新区创新大道1号', industry: '新能源', tags: ['上市', '链主', '高企'], legalPerson: '张明', registeredCapital: '50000', employeeCount: '2500', revenue: '85.6', scale: '大型', phone: '0551-12345678', creditCode: '91340100MA2N3K4L5M' },
+            { id: 2, name: '智造未来机器人有限公司', status: '正常', foundDate: '2015-06-20', address: '经开区智能制造园', industry: '智能机器人', tags: ['独角兽', '专精特新'], legalPerson: '李华', registeredCapital: '30000', employeeCount: '1200', revenue: '45.3', scale: '中型', phone: '0551-23456789', creditCode: '91340100MA2N3K4L6N' },
+            { id: 3, name: '绿能环保科技股份', status: '正常', foundDate: '2012-09-08', address: '包河区环保产业园', industry: '新能源', tags: ['上市', '高企'], legalPerson: '王强', registeredCapital: '40000', employeeCount: '1800', revenue: '62.8', scale: '大型', phone: '0551-34567890', creditCode: '91340100MA2N3K4L7O' },
+            { id: 4, name: '芯片半导体科技', status: '正常', foundDate: '2010-11-12', address: '高新区微电子园', industry: '电子信息', tags: ['上市', '高企'], legalPerson: '赵伟', registeredCapital: '60000', employeeCount: '3200', revenue: '120.5', scale: '大型', phone: '0551-45678901', creditCode: '91340100MA2N3K4L8P' },
+            { id: 5, name: '医药生物研发中心', status: '正常', foundDate: '2013-04-25', address: '蜀山区生物医药园', industry: '生物医药', tags: ['上市', '高企'], legalPerson: '孙丽', registeredCapital: '35000', employeeCount: '1500', revenue: '55.2', scale: '中型', phone: '0551-56789012', creditCode: '91340100MA2N3K4L9Q' },
+            { id: 6, name: '云计算服务有限公司', status: '正常', foundDate: '2016-07-30', address: '高新区软件园', industry: '人工智能', tags: ['上市', '高企'], legalPerson: '周杰', registeredCapital: '45000', employeeCount: '2000', revenue: '78.9', scale: '大型', phone: '0551-67890123', creditCode: '91340100MA2N3K4M0R' },
+            { id: 7, name: '智能算法科技', status: '正常', foundDate: '2017-02-14', address: '瑶海区科技园', industry: '人工智能', tags: ['高企', '专精特新'], legalPerson: '吴敏', registeredCapital: '25000', employeeCount: '800', revenue: '32.5', scale: '中型', phone: '0551-78901234', creditCode: '91340100MA2N3K4M1S' },
+            { id: 8, name: '新材料研发中心', status: '正常', foundDate: '2011-05-18', address: '庐阳区新材料园', industry: '新材料', tags: ['高企', '专精特新'], legalPerson: '郑涛', registeredCapital: '28000', employeeCount: '1000', revenue: '38.7', scale: '中型', phone: '0551-89012345', creditCode: '91340100MA2N3K4M2T' },
+            { id: 9, name: '光电技术股份公司', status: '正常', foundDate: '2014-08-22', address: '新站区光电园', industry: '电子信息', tags: ['高企', '瞪羚'], legalPerson: '冯磊', registeredCapital: '32000', employeeCount: '1300', revenue: '48.6', scale: '中型', phone: '0551-90123456', creditCode: '91340100MA2N3K4M3U' },
+            { id: 10, name: '低空飞行器制造', status: '正常', foundDate: '2018-01-10', address: '经开区航空产业园', industry: '低空经济', tags: ['专精特新', '瞪羚'], legalPerson: '陈静', registeredCapital: '20000', employeeCount: '600', revenue: '25.8', scale: '小型', phone: '0551-01234567', creditCode: '91340100MA2N3K4M4V' },
+            { id: 11, name: '智能驾驶科技', status: '正常', foundDate: '2019-03-05', address: '高新区智能网联园', industry: '人工智能', tags: ['独角兽', '高企'], legalPerson: '楚阳', registeredCapital: '55000', employeeCount: '2200', revenue: '92.3', scale: '大型', phone: '0551-11234567', creditCode: '91340100MA2N3K4M5W' },
+            { id: 12, name: '新能源汽车动力', status: '正常', foundDate: '2009-12-20', address: '包河区汽车产业园', industry: '新能源', tags: ['链主', '上市', '高企'], legalPerson: '韩梅', registeredCapital: '70000', employeeCount: '3500', revenue: '135.7', scale: '大型', phone: '0551-22345678', creditCode: '91340100MA2N3K4M6X' },
+            { id: 13, name: '工业机器人制造', status: '正常', foundDate: '2016-09-15', address: '经开区机器人园', industry: '智能机器人', tags: ['专精特新', '高企'], legalPerson: '曹雪', registeredCapital: '26000', employeeCount: '900', revenue: '35.4', scale: '中型', phone: '0551-33456789', creditCode: '91340100MA2N3K4M7Y' },
+            { id: 14, name: '生物制药研究院', status: '正常', foundDate: '2012-06-08', address: '蜀山区医药园', industry: '生物医药', tags: ['高企', '专精特新'], legalPerson: '蒋峰', registeredCapital: '38000', employeeCount: '1600', revenue: '58.9', scale: '中型', phone: '0551-44567890', creditCode: '91340100MA2N3K4M8Z' },
+            { id: 15, name: '无人机系统集成', status: '正常', foundDate: '2017-11-25', address: '新站区无人机基地', industry: '低空经济', tags: ['瞪羚', '高企'], legalPerson: '沈琳', registeredCapital: '22000', employeeCount: '700', revenue: '28.6', scale: '小型', phone: '0551-55678901', creditCode: '91340100MA2N3K4N0A' },
+            { id: 16, name: '量子通信技术', status: '正常', foundDate: '2015-04-12', address: '高新区量子园', industry: '电子信息', tags: ['链主', '高企'], legalPerson: '韩信', registeredCapital: '48000', employeeCount: '1900', revenue: '72.5', scale: '大型', phone: '0551-66789012', creditCode: '91340100MA2N3K4N1B' },
+            { id: 17, name: '碳纤维新材料', status: '正常', foundDate: '2013-07-30', address: '庐阳区复合材料园', industry: '新材料', tags: ['专精特新', '高企'], legalPerson: '吕布', registeredCapital: '29000', employeeCount: '1100', revenue: '42.3', scale: '中型', phone: '0551-77890123', creditCode: '91340100MA2N3K4N2C' },
+            { id: 18, name: '智能传感器制造', status: '正常', foundDate: '2018-05-20', address: '瑶海区传感器园', industry: '电子信息', tags: ['高企', '瞪羚'], legalPerson: '貂蝉', registeredCapital: '24000', employeeCount: '850', revenue: '31.8', scale: '中型', phone: '0551-88901234', creditCode: '91340100MA2N3K4N3D' },
+            { id: 19, name: '飞行汽车研发', status: '正常', foundDate: '2020-02-15', address: '经开区未来交通园', industry: '低空经济', tags: ['独角兽'], legalPerson: '关羽', registeredCapital: '65000', employeeCount: '2800', revenue: '105.6', scale: '大型', phone: '0551-99012345', creditCode: '91340100MA2N3K4N4E' },
+            { id: 20, name: '协作机器人科技', status: '正常', foundDate: '2016-10-08', address: '高新区机器人谷', industry: '智能机器人', tags: ['专精特新', '高企'], legalPerson: '张飞', registeredCapital: '27000', employeeCount: '950', revenue: '36.9', scale: '中型', phone: '0551-00123456', creditCode: '91340100MA2N3K4N5F' }
+        ];
+
+        // 当前企业数据
+        let currentEnterprise = null;
+
+        // 初始化页面
+        function init() {
+            if (enterpriseId) {
+                currentEnterprise = enterprises.find(e => e.id == enterpriseId);
+                if (currentEnterprise) {
+                    renderEnterpriseDetail();
+                } else {
+                    alert('企业不存在');
+                    goBack();
+                }
+            } else {
+                // 默认显示第一个企业
+                currentEnterprise = enterprises[0];
+                renderEnterpriseDetail();
+            }
+        }
+
+        // 渲染企业详情
+        function renderEnterpriseDetail() {
+            const e = currentEnterprise;
+
+            // 基本信息
+            // document.getElementById('companyLogo').textContent = e.name.substring(0, 2);
+            document.getElementById('companyName').textContent = e.name;
+            document.getElementById('creditCode').textContent = e.creditCode || '91350000700537155';
+            // document.getElementById('legalPerson').textContent = e.legalPerson;
+            // document.getElementById('registeredCapital').textContent = e.registeredCapital + ' 万元';
+            // document.getElementById('foundDate').textContent = e.foundDate;
+            // document.getElementById('industry').textContent = e.industry;
+            // document.getElementById('companyScale').textContent = e.scale;
+            // document.getElementById('employeeCount').textContent = e.employeeCount + '人';
+            // document.getElementById('revenue').textContent = e.revenue + '亿元';
+            // document.getElementById('address').textContent = e.address;
+
+            // 企业标签
+            const tagColors = {
+                '上市': 'bg-red-100 text-red-600',
+                '链主': 'bg-orange-100 text-orange-600',
+                '高企': 'bg-blue-100 text-blue-600',
+                '专精特新': 'bg-green-100 text-green-600',
+                '独角兽': 'bg-purple-100 text-purple-600',
+                '瞪羚': 'bg-pink-100 text-pink-600'
+            };
+
+            const tagsHtml = e.tags.map(tag =>
+                `<span class="px-2 py-0.5 ${tagColors[tag] || 'bg-gray-100 text-gray-600'} text-xs rounded">${tag}</span>`
+            ).join('');
+            document.getElementById('companyTags').innerHTML = tagsHtml;
+
+            // 产业类型标签
+            const industryColors = {
+                '新能源': 'bg-green-50 text-green-600 border-green-200',
+                '智能机器人': 'bg-purple-50 text-purple-600 border-purple-200',
+                '生物医药': 'bg-pink-50 text-pink-600 border-pink-200',
+                '电子信息': 'bg-blue-50 text-blue-600 border-blue-200',
+                '人工智能': 'bg-indigo-50 text-indigo-600 border-indigo-200',
+                '新材料': 'bg-orange-50 text-orange-600 border-orange-200',
+                '低空经济': 'bg-cyan-50 text-cyan-600 border-cyan-200'
+            };
+            const industryColor = industryColors[e.industry] || 'bg-blue-50 text-blue-600 border-blue-200';
+            document.getElementById('industryTag').textContent = e.industry;
+            document.getElementById('industryTag').className = `px-2 py-1 ${industryColor} text-xs rounded border whitespace-nowrap flex-shrink-0`;
+
+            // 简介
+            // document.getElementById('companyIntro').textContent = `简介：${e.name}，${e.industry}领域领先企业...`;
+            // document.getElementById('mainBusiness').textContent = `${e.industry}相关产品研发、生产、销售...`;
+
+            // 渲染新增模块
+            renderBusinessInfo();
+            renderBusinessChanges();
+            renderIndustryRelated();
+            renderOperatingInfo();
+            renderInnovation();
+
+            // 渲染股东信息
+            renderShareholders();
+
+            // 渲染人员信息
+            renderPersonnel();
+        }
+
+        // 渲染股东信息
+        function renderShareholders() {
+            const shareholders = [
+                { name: '紫金矿业...', type: '龙头', bgColor: 'bg-yellow-50', textColor: 'text-yellow-700', badge: '龙头', badgeBg: 'bg-yellow-100', badgeText: 'text-yellow-700', percent: '21.08%', count: '80' },
+                { name: '龙岩市国有资产...', type: '国资', bgColor: 'bg-green-50', textColor: 'text-green-700', badge: '国资', badgeBg: 'bg-green-100', badgeText: 'text-green-700', percent: '7.9%', count: '12' },
+                { name: '罗津晶', type: '个人', bgColor: 'bg-purple-50', textColor: 'text-purple-700', badge: '', badgeBg: '', badgeText: '', percent: '4.94%', count: '5' }
+            ];
+
+            const html = `
+                <div class="flex flex-nowrap gap-3">
+                    ${shareholders.map(s => `
+                        <div class="flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 ${s.bgColor} rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-lg font-bold ${s.textColor}">${s.name.substring(0, 1)}</span>
+                                </div>
+                                <div class="text-center mb-2">
+                                    <h4 class="text-sm font-semibold text-gray-900 mb-1 truncate w-full">${s.name}</h4>
+                                </div>
+                                <div class="text-xs text-gray-600 text-center w-full">
+                                    <div class="mb-1">持股比例</div>
+                                    <div class="font-semibold text-gray-900 mb-2">${s.percent}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('shareholdersList').innerHTML = html;
+        }
+
+        // 渲染人员信息
+        function renderPersonnel() {
+            const personnel = [
+                { name: '万建军', position: '董事会秘书', companies: '2' },
+                { name: '林涛', position: '独立董事', companies: '1' },
+                { name: '罗津晶', position: '独立董事', companies: '1' }
+            ];
+
+            const html = `
+                <div class="flex flex-nowrap gap-3">
+                    ${personnel.map(p => `
+                        <div class="flex-shrink-0 w-40 bg-white border border-gray-200 rounded-lg p-3">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-white text-lg font-bold">${p.name.substring(0, 1)}</span>
+                                </div>
+                                <div class="text-center mb-2">
+                                    <h4 class="text-sm font-semibold text-gray-900 mb-1">${p.name}</h4>
+                                    <div class="text-xs text-gray-600">${p.position}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('personnelList').innerHTML = html;
+        }
+
+        // 渲染工商信息
+        function renderBusinessInfo() {
+            const e = currentEnterprise;
+
+            // 前6个字段：卡片式布局
+            const cardFields = [
+                { label: '法定代表人', value: e.legalPerson },
+                { label: '注册资本', value: e.registeredCapital + ' 万元' },
+                { label: '成立时间', value: e.foundDate },
+                { label: '所属行业', value: e.industry },
+                { label: '联系人', value: e.legalPerson },
+                { label: '联系电话', value: e.phone }
+            ];
+
+            // 经营范围：单独显示
+            const businessScope = `${e.industry}相关产品的研发、生产、销售；技术咨询服务；进出口业务等`;
+
+            const html = `
+                <!-- 卡片式布局：2行3列 -->
+                <div class="grid grid-cols-3 gap-3 mb-3">
+                    ${cardFields.map(field => `
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-xs text-gray-500 mb-1">${field.label}</div>
+                            <div class="text-xs text-gray-900 font-semibold">${field.value}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- 经营范围：单独显示 -->
+                <div class="flex items-start py-2 border-t border-gray-100">
+                    <span class="text-xs text-gray-500 w-24 flex-shrink-0">经营范围</span>
+                    <span class="text-xs text-gray-900 font-medium flex-1">${businessScope}</span>
+                </div>
+            `;
+
+            document.getElementById('businessInfoList').innerHTML = html;
+        }
+
+        // 渲染工商变更
+        function renderBusinessChanges() {
+            const changes = [
+                { date: '2025-08-09', type: '注册资金变更' },
+                { date: '2025-07-21', type: '经营地址变更' },
+                { date: '2024-10-12', type: '其他变更' }
+            ];
+
+            const html = `
+                <div class="flex flex-nowrap gap-3">
+                    ${changes.map(change => `
+                        <div class="flex-shrink-0 w-32 bg-gray-50 rounded-lg p-3">
+                            <div class="flex flex-col">
+                                <div class="text-xs text-gray-500 mb-2">${change.date}</div>
+                                <div class="text-xs text-gray-900 font-semibold">${change.type}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('businessChangesList').innerHTML = html;
+        }
+
+        // 渲染产业相关
+        function renderIndustryRelated() {
+            const industries = [
+                {
+                    text: '在<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'低空经济产业\', \'上游\')">低空经济产业</strong><strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'低空经济产业\', \'上游\')">上游</strong>的环节布局了<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryNode(\'支持系统\')">支持系统</strong>',
+                    color: 'bg-blue-500'
+                },
+                {
+                    text: '在<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'低空经济产业\', \'中游\')">低空经济产业</strong><strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'低空经济产业\', \'中游\')">中游</strong>的环节布局了<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryNode(\'总装制造\')">总装制造</strong>',
+                    color: 'bg-green-500'
+                },
+                {
+                    text: '在<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'人工智能产业\', \'上游\')">人工智能产业</strong><strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryLevel(\'人工智能产业\', \'上游\')">上游</strong>布局了<strong class="cursor-pointer text-blue-600 hover:underline" onclick="viewIndustryNode(\'底层软件\')">底层软件</strong>',
+                    color: 'bg-purple-500'
+                }
+            ];
+
+            const html = industries.map((item, index) => `
+                <div class="flex items-start py-2.5 relative">
+                    <!-- 竖线 -->
+                    ${index < industries.length - 1 ? `
+                        <div class="absolute left-1 top-6 bottom-0 w-0.5 bg-gray-300" style="height: calc(100% - 0.5rem);"></div>
+                    ` : ''}
+                    <!-- 圆点 -->
+                    <div class="w-2 h-2 ${item.color} rounded-full mt-1.5 mr-2.5 flex-shrink-0 relative z-10"></div>
+                    <!-- 文字内容 -->
+                    <div class="text-xs text-gray-700 flex-1 leading-relaxed">${item.text}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('industryRelatedList').innerHTML = html;
+        }
+
+        // 渲染经营信息
+        function renderOperatingInfo() {
+            const e = currentEnterprise;
+            const operatingData = [
+                { label: '2024年营业收入', value: e.revenue + '亿元' },
+                { label: '2024年企业税收', value: (parseFloat(e.revenue) * 0.15).toFixed(1) + '亿元' },
+                { label: '2024年研发投入', value: (parseFloat(e.revenue) * 0.08).toFixed(1) + '亿元' },
+                { label: '2024年社保人数', value: e.employeeCount + '人' }
+            ];
+
+            const html = operatingData.map(item => `
+                <div class="bg-gray-50 rounded-lg p-3">
+                    <div class="text-xs text-gray-500 mb-1">${item.label}</div>
+                    <div class="text-base font-bold text-gray-900">${item.value}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('operatingInfoGrid').innerHTML = html;
+        }
+
+        // 渲染科技创新
+        function renderInnovation() {
+            const e = currentEnterprise;
+            const ipStats = [
+                { label: '专利', value: '156', relatedValue: '89', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', color: 'text-blue-600' },
+                { label: '商标', value: '42', relatedValue: '28', icon: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z', color: 'text-green-600' },
+                { label: '软著权', value: '28', relatedValue: '15', icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253', color: 'text-purple-600' }
+            ];
+
+            const highlights = [
+                '近3年平均每年新增专利数不少于10',
+                '近1年新增建筑工程类资质认证',
+                '近6个月内参与国家/行业标准制定',
+                '近1个月有新增软件著作权'
+            ];
+
+            const ipStatsHtml = ipStats.map(item => `
+                <div class="bg-gray-50 rounded-lg p-3 flex flex-col items-center ${item.label === '专利' ? 'cursor-pointer active:bg-gray-100' : ''}" ${item.label === '专利' ? 'onclick="viewIPStatistics()"' : ''}>
+                    <svg class="w-6 h-6 ${item.color} mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${item.icon}"></path>
+                    </svg>
+                    <div class="text-xs text-gray-500 mb-1">${item.label}</div>
+                    <div class="text-lg font-bold ${item.label === '专利' ? 'text-blue-600' : 'text-gray-900'} mb-1">${item.value}</div>
+                    <div class="text-xs text-gray-500">
+                        <span class="text-blue-600 font-semibold">${item.relatedValue}</span> 与${e.industry}相关
+                    </div>
+                </div>
+            `).join('');
+
+            const highlightsHtml = highlights.map(text => `
+                <div class="flex items-start py-1.5">
+                    <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-xs text-gray-700 flex-1">${text}</span>
+                </div>
+            `).join('');
+
+            const html = `
+                <div class="grid grid-cols-3 gap-3 mb-3">
+                    ${ipStatsHtml}
+                </div>
+                <div class="space-y-1">
+                    ${highlightsHtml}
+                </div>
+            `;
+
+            document.getElementById('innovationContent').innerHTML = html;
+        }
+
+        // 返回
+        function goBack() {
+            window.history.back();
+        }
+
+        // 切换Tab
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'dynamic') {
+                alert('动态功能开发中...');
+            }
+        }
+
+        // 显示更多
+        function showMore() {
+            alert('更多功能：\n- 分享\n- 举报\n- 复制链接');
+        }
+
+        // 查看详情
+        function viewDetail(type) {
+            const titles = {
+                'intro': '企业简介',
+                'shareholders': '股东信息'
+            };
+            alert(`查看${titles[type]}详情`);
+        }
+
+        // 查看报告
+        function viewReport() {
+            alert('查看企业报告');
+        }
+
+        // 切换关注
+        function toggleFavorite() {
+            alert('已添加关注');
+        }
+
+        // 找关系
+        function findRelated() {
+            alert('查找企业关系');
+        }
+
+        // 查看工具箱
+        function viewTools() {
+            alert('工具箱功能');
+        }
+
+        // 监控动态
+        function monitorDynamic() {
+            alert('开启企业动态监控');
+        }
+
+        // 联系方式相关函数
+        function callPhone() {
+            alert('拨打电话：' + (currentEnterprise ? currentEnterprise.phone : ''));
+        }
+
+        function openWebsite() {
+            alert('打开网址');
+        }
+
+        function sendEmail() {
+            alert('发送邮件');
+        }
+
+        function viewAddress() {
+            alert('查看地址：' + (currentEnterprise ? currentEnterprise.address : ''));
+        }
+
+        // 查看产业节点企业列表
+        function viewIndustryNode(nodeName) {
+            window.location.href = `industry-node-enterprises.html?node=${encodeURIComponent(nodeName)}`;
+        }
+
+        // 查看产业层级子节点
+        function viewIndustryLevel(industry, level) {
+            window.location.href = `industry-level-nodes.html?industry=${encodeURIComponent(industry)}&level=${encodeURIComponent(level)}`;
+        }
+
+        // 查看更多信息
+        function viewMoreInfo(type) {
+            const enterpriseId = currentEnterprise ? currentEnterprise.id : 1;
+            const pages = {
+                'changes': `business-changes.html?id=${enterpriseId}`,
+                'business': `operating-data.html?id=${enterpriseId}`
+            };
+
+            if (pages[type]) {
+                window.location.href = pages[type];
+            } else {
+                const titles = {
+                    'basic': '基本信息',
+                    'profile': '企业画像',
+                    'industry': '产业相关',
+                    'innovation': '科技创新'
+                };
+                alert(`查看${titles[type]}`);
+            }
+        }
+
+        // 查看知识产权统计
+        function viewIPStatistics() {
+            const enterpriseId = currentEnterprise ? currentEnterprise.id : 1;
+            window.location.href = `ip-statistics.html?id=${enterpriseId}`;
+        }
+
+        // 查看风险列表
+        function viewRiskList() {
+            const enterpriseId = currentEnterprise ? currentEnterprise.id : 1;
+            window.location.href = `risk-list.html?id=${enterpriseId}`;
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+

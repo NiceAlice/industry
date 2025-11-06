@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>资讯详情 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .tab-item {
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">资讯详情</h1>
+            <button onclick="shareNews()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="bg-white border-b sticky top-14 z-40">
+        <div class="flex items-center">
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-blue-600" onclick="switchTab('detail')">
+                <span class="text-sm font-semibold text-blue-600">详情</span>
+            </div>
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-transparent" onclick="switchTab('summary')">
+                <span class="text-sm text-gray-600">摘要</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情内容 -->
+    <div id="detail-content" class="pb-6">
+        <!-- 封面图片 -->
+        <div class="w-full h-48 bg-gray-200">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=400&fit=crop" 
+                 class="w-full h-full object-cover" alt="资讯封面" id="newsImage">
+        </div>
+        
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+            <!-- 资讯标题 -->
+            <h2 class="text-lg font-bold text-gray-900 mb-3" id="newsTitle">新能源汽车产销量创历史新高，行业进入快速发展期</h2>
+            
+            <!-- 资讯标签 -->
+            <div class="flex items-center space-x-2 mb-3">
+                <span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded">智能机器人</span>
+                <span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded">行业动态</span>
+            </div>
+            
+            <!-- 资讯元信息 -->
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-4 pb-4 border-b">
+                <div class="flex items-center space-x-3">
+                    <span id="newsSource">产业日报</span>
+                    <span>•</span>
+                    <span id="newsDate">2024年11月6日 14:30</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>8.5k</span>
+                </div>
+            </div>
+            
+            <!-- 资讯详细内容 -->
+            <div class="space-y-4 text-sm text-gray-700 leading-relaxed" id="newsContent">
+                <p><strong>【产业日报讯】</strong>根据中国汽车工业协会最新发布的数据，2024年10月，我国新能源汽车产销量分别达到85.6万辆和88.2万辆，同比增长35.8%和42.3%，再创历史新高。</p>
+                
+                <p>数据显示，1-10月，新能源汽车累计产销量分别完成728.5万辆和735.2万辆，同比增长33.9%和37.8%，市场占有率达到30.4%。其中，纯电动汽车产销量分别完成558.2万辆和562.8万辆，同比增长28.5%和31.2%；插电式混合动力汽车产销量分别完成170.3万辆和172.4万辆，同比增长52.8%和58.6%。</p>
+                
+                <h3 class="font-bold text-gray-900 mt-4 mb-2">产业链持续完善</h3>
+                
+                <p>业内专家表示，新能源汽车产销量的快速增长，得益于我国新能源汽车产业链的持续完善和技术水平的不断提升。目前，我国已经形成了从上游原材料、中游零部件到下游整车制造的完整产业链体系。</p>
+                
+                <p>在动力电池领域，宁德时代、比亚迪等企业的技术水平已经达到国际领先水平，电池能量密度、安全性能和成本控制能力持续提升。在智能驾驶领域，华为、百度等科技企业也在加速布局，推动新能源汽车向智能化方向发展。</p>
+                
+                <h3 class="font-bold text-gray-900 mt-4 mb-2">政策支持力度加大</h3>
+                
+                <p>近年来，国家和地方政府出台了一系列支持新能源汽车发展的政策措施。从购置补贴、税收优惠到充电基础设施建设，多维度的政策支持为新能源汽车产业发展创造了良好环境。</p>
+                
+                <p>今年以来，多地陆续出台了新能源汽车消费促进政策，包括购车补贴、充电优惠、停车费减免等措施，进一步激发了消费者的购买热情。</p>
+                
+                <h3 class="font-bold text-gray-900 mt-4 mb-2">市场竞争日趋激烈</h3>
+                
+                <p>随着新能源汽车市场的快速发展，市场竞争也日趋激烈。传统车企加速电动化转型，造车新势力持续发力，科技企业跨界入局，市场格局正在发生深刻变化。</p>
+                
+                <p>比亚迪、特斯拉、理想、蔚来、小鹏等企业在各自细分市场表现突出，产品竞争力不断提升。同时，华为、小米等科技企业的入局，也为行业带来了新的活力和变革。</p>
+                
+                <h3 class="font-bold text-gray-900 mt-4 mb-2">出口市场表现亮眼</h3>
+                
+                <p>值得关注的是，我国新能源汽车出口也呈现快速增长态势。1-10月，新能源汽车出口99.5万辆，同比增长99.1%，接近翻倍增长。</p>
+                
+                <p>欧洲、东南亚、中东等地区成为我国新能源汽车出口的主要市场。比亚迪、上汽、长城等企业积极开拓海外市场，在多个国家和地区建立了生产基地和销售网络。</p>
+                
+                <h3 class="font-bold text-gray-900 mt-4 mb-2">未来发展展望</h3>
+                
+                <p>展望未来，新能源汽车产业仍将保持快速发展态势。随着技术进步、成本下降和配套设施完善，新能源汽车的市场渗透率将进一步提升。</p>
+                
+                <p>中国汽车工业协会预测，2024年全年新能源汽车销量有望突破1000万辆，市场占有率将超过35%。到2030年，新能源汽车市场占有率有望达到50%以上，成为汽车市场的主流。</p>
+                
+                <p>业内人士指出，未来新能源汽车产业将呈现以下发展趋势：一是技术创新持续加速，固态电池、氢燃料电池等新技术将逐步商业化；二是智能化水平不断提升，自动驾驶技术将加速落地；三是产业链国际化程度加深，中国新能源汽车企业将在全球市场发挥更大作用。</p>
+            </div>
+        </div>
+        
+        <!-- 相关资讯 -->
+        <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3">相关资讯</h3>
+            <div class="space-y-3">
+                <div class="flex items-start pb-3 border-b" onclick="viewRelatedNews(2)">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=100&h=80&fit=crop" 
+                         class="w-20 h-16 rounded-lg object-cover mr-3 flex-shrink-0" alt="相关资讯">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">人工智能技术赋能制造业，智能工厂建设提速</h4>
+                        <p class="text-xs text-gray-500">科技前沿 • 5小时前</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start" onclick="viewRelatedNews(3)">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=100&h=80&fit=crop" 
+                         class="w-20 h-16 rounded-lg object-cover mr-3 flex-shrink-0" alt="相关资讯">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-medium text-gray-900 mb-1 line-clamp-2">芯片产业链加速国产化替代，关键技术取得突破</h4>
+                        <p class="text-xs text-gray-500">行业观察 • 1天前</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 摘要内容 -->
+    <div id="summary-content" class="pb-6 hidden">
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                文章概述
+            </h3>
+            <div class="text-sm text-gray-700 leading-relaxed space-y-3">
+                <p>2024年10月，我国新能源汽车产销量分别达到85.6万辆和88.2万辆，同比增长35.8%和42.3%，再创历史新高。1-10月累计产销量分别完成728.5万辆和735.2万辆，市场占有率达到30.4%。</p>
+                <p>新能源汽车产业链持续完善，从上游原材料到下游整车制造形成完整体系。动力电池、智能驾驶等关键技术达到国际领先水平。政策支持力度加大，市场竞争日趋激烈，出口市场表现亮眼。</p>
+                <p>预计2024年全年销量有望突破1000万辆，市场占有率将超过35%。未来将呈现技术创新加速、智能化提升、国际化深化等发展趋势。</p>
+            </div>
+        </div>
+        
+        <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                关键要点
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">产销量创新高</p>
+                        <p class="text-xs text-gray-600">10月产销量分别达85.6万辆和88.2万辆，同比增长35.8%和42.3%</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">市场占有率提升</p>
+                        <p class="text-xs text-gray-600">1-10月市场占有率达30.4%，预计全年将超过35%</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">产业链完善</p>
+                        <p class="text-xs text-gray-600">形成从上游原材料到下游整车制造的完整产业链体系</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">4</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">技术领先</p>
+                        <p class="text-xs text-gray-600">动力电池、智能驾驶等关键技术达到国际领先水平</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">5</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">出口强劲</p>
+                        <p class="text-xs text-gray-600">1-10月出口99.5万辆，同比增长99.1%，接近翻倍</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">6</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">未来可期</p>
+                        <p class="text-xs text-gray-600">2024年全年销量有望突破1000万辆，2030年市场占有率将达50%以上</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsId = urlParams.get('id') || 1;
+
+        function goBack() {
+            window.location.href = 'resources.html';
+        }
+
+        function shareNews() {
+            alert('分享资讯功能');
+        }
+
+        function switchTab(tab) {
+            // 隐藏所有内容
+            document.getElementById('detail-content').classList.add('hidden');
+            document.getElementById('summary-content').classList.add('hidden');
+            
+            // 重置所有tab样式
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('border-blue-600');
+                item.classList.add('border-transparent');
+                item.querySelector('span').classList.remove('text-blue-600', 'font-semibold');
+                item.querySelector('span').classList.add('text-gray-600');
+            });
+            
+            // 显示选中的内容和样式
+            const tabElement = event.currentTarget;
+            tabElement.classList.add('border-blue-600');
+            tabElement.classList.remove('border-transparent');
+            tabElement.querySelector('span').classList.add('text-blue-600', 'font-semibold');
+            tabElement.querySelector('span').classList.remove('text-gray-600');
+            
+            document.getElementById(tab + '-content').classList.remove('hidden');
+        }
+
+        function viewRelatedNews(id) {
+            window.location.href = `news-detail.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>
+

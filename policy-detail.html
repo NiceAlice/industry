@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>政策详情 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .tab-item {
+            transition: all 0.2s;
+        }
+        .chat-message {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">政策详情</h1>
+            <button onclick="sharePolicy()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="bg-white border-b sticky top-14 z-40">
+        <div class="flex items-center">
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-blue-600" onclick="switchTab('detail')">
+                <span class="text-sm font-semibold text-blue-600">详情</span>
+            </div>
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-transparent" onclick="switchTab('summary')">
+                <span class="text-sm text-gray-600">摘要</span>
+            </div>
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-transparent" onclick="switchTab('qa')">
+                <span class="text-sm text-gray-600">问答</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情内容 -->
+    <div id="detail-content" class="pb-6">
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+            <!-- 政策标题 -->
+            <h2 class="text-lg font-bold text-gray-900 mb-3" id="policyTitle">关于支持新能源产业高质量发展的若干政策措施</h2>
+            
+            <!-- 政策标签 -->
+            <div class="flex items-center space-x-2 mb-3">
+                <span class="px-2 py-1 bg-red-100 text-red-600 text-xs rounded">国家级</span>
+                <span class="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded">人工智能</span>
+            </div>
+            
+            <!-- 政策元信息 -->
+            <div class="space-y-2 mb-4 pb-4 border-b">
+                <div class="flex items-center text-sm">
+                    <span class="text-gray-500 w-24">发文机构：</span>
+                    <span class="text-gray-900 font-medium" id="policyOrg">国家发改委</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-gray-500 w-24">发布时间：</span>
+                    <span class="text-gray-900" id="policyDate">2024年1月15日</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-gray-500 w-24">文号：</span>
+                    <span class="text-gray-900">发改产业〔2024〕15号</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <span class="text-gray-500 w-24">有效期：</span>
+                    <span class="text-gray-900">2024年1月15日 - 2027年1月14日</span>
+                </div>
+            </div>
+            
+            <!-- 政策详细内容 -->
+            <div class="space-y-4 text-sm text-gray-700 leading-relaxed" id="policyContent">
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">一、总体要求</h3>
+                    <p class="mb-2">为深入贯彻落实党中央、国务院关于推动新能源产业高质量发展的决策部署，加快构建清洁低碳、安全高效的能源体系，促进新能源产业持续健康发展，制定本政策措施。</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">二、支持范围</h3>
+                    <p class="mb-2">本政策支持范围包括但不限于：</p>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                        <li>太阳能光伏发电技术研发与应用</li>
+                        <li>风力发电装备制造与技术创新</li>
+                        <li>新能源汽车及动力电池产业</li>
+                        <li>储能技术研发与产业化</li>
+                        <li>氢能及燃料电池技术应用</li>
+                        <li>智能电网及能源互联网建设</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">三、支持政策</h3>
+                    <p class="mb-2"><strong>（一）财政支持</strong></p>
+                    <p class="mb-2">1. 对符合条件的新能源项目给予最高500万元的资金补贴；</p>
+                    <p class="mb-2">2. 对新能源技术研发投入给予30%的研发费用补助；</p>
+                    <p class="mb-2">3. 对新能源产业园区基础设施建设给予专项资金支持。</p>
+                    
+                    <p class="mb-2 mt-3"><strong>（二）税收优惠</strong></p>
+                    <p class="mb-2">1. 新能源企业享受企业所得税"三免三减半"优惠政策；</p>
+                    <p class="mb-2">2. 新能源设备采购可享受增值税即征即退政策；</p>
+                    <p class="mb-2">3. 新能源技术转让所得免征企业所得税。</p>
+                    
+                    <p class="mb-2 mt-3"><strong>（三）金融支持</strong></p>
+                    <p class="mb-2">1. 鼓励金融机构加大对新能源项目的信贷支持力度；</p>
+                    <p class="mb-2">2. 支持符合条件的新能源企业发行绿色债券；</p>
+                    <p class="mb-2">3. 设立新能源产业投资基金，引导社会资本投入。</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">四、申报条件</h3>
+                    <p class="mb-2">申报企业应同时满足以下条件：</p>
+                    <ul class="list-disc list-inside space-y-1 ml-2">
+                        <li>在中华人民共和国境内依法注册的企业法人；</li>
+                        <li>从事新能源相关产业，具有独立法人资格；</li>
+                        <li>企业财务状况良好，无重大违法违规记录；</li>
+                        <li>项目符合国家产业政策和环保要求；</li>
+                        <li>具有完善的项目实施方案和可行性研究报告。</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">五、申报流程</h3>
+                    <p class="mb-2">1. 企业登录国家发改委政务服务平台进行在线申报；</p>
+                    <p class="mb-2">2. 提交项目申报材料，包括申请书、可行性研究报告、企业资质证明等；</p>
+                    <p class="mb-2">3. 地方发改部门进行初审并出具推荐意见；</p>
+                    <p class="mb-2">4. 国家发改委组织专家评审；</p>
+                    <p class="mb-2">5. 公示评审结果，无异议后下达资金支持文件。</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">六、监督管理</h3>
+                    <p class="mb-2">各级发改部门要加强对政策执行情况的监督检查，确保资金使用规范、项目实施有效。对弄虚作假、骗取资金支持的企业，将依法追究责任，并纳入失信名单。</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-gray-900 mb-2">七、附则</h3>
+                    <p class="mb-2">本政策自发布之日起施行，有效期3年。各地可根据实际情况制定具体实施细则。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 相关附件 -->
+        <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3">相关附件</h3>
+            <div class="space-y-2">
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center flex-1">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">政策申报表.docx</p>
+                            <p class="text-xs text-gray-500">256 KB</p>
+                        </div>
+                    </div>
+                    <button onclick="downloadFile('政策申报表.docx')" class="text-blue-600 text-sm">下载</button>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center flex-1">
+                        <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium text-gray-900">政策解读文件.pdf</p>
+                            <p class="text-xs text-gray-500">1.2 MB</p>
+                        </div>
+                    </div>
+                    <button onclick="downloadFile('政策解读文件.pdf')" class="text-blue-600 text-sm">下载</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 摘要内容 -->
+    <div id="summary-content" class="pb-6 hidden">
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                文章概述
+            </h3>
+            <div class="text-sm text-gray-700 leading-relaxed space-y-3">
+                <p>本政策旨在推动新能源产业高质量发展，通过财政补贴、税收优惠、金融支持等多种方式，支持新能源技术研发、产业化应用和基础设施建设。</p>
+                <p>政策覆盖太阳能、风能、新能源汽车、储能、氢能等多个领域，为符合条件的企业提供最高500万元的资金补贴和30%的研发费用补助。</p>
+                <p>政策有效期为3年，申报企业需满足相关条件并通过规范的申报流程。</p>
+            </div>
+        </div>
+        
+        <div class="bg-white mx-4 mt-3 rounded-xl p-4 shadow-sm">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                关键要点
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">财政支持力度大</p>
+                        <p class="text-xs text-gray-600">最高500万元项目补贴，30%研发费用补助，专项资金支持基础设施建设</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">税收优惠政策</p>
+                        <p class="text-xs text-gray-600">企业所得税"三免三减半"，增值税即征即退，技术转让所得免税</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">金融支持多元化</p>
+                        <p class="text-xs text-gray-600">信贷支持、绿色债券、产业投资基金等多种金融工具</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">4</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">覆盖领域广泛</p>
+                        <p class="text-xs text-gray-600">涵盖光伏、风电、新能源汽车、储能、氢能、智能电网等多个领域</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 mr-3">
+                        <span class="text-xs font-bold">5</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-900 mb-1">申报流程规范</p>
+                        <p class="text-xs text-gray-600">在线申报、地方初审、专家评审、公示等规范流程，确保公平公正</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 问答内容 -->
+    <div id="qa-content" class="pb-6 hidden">
+        <!-- 推荐问题 -->
+        <div class="mx-4 mt-4">
+            <h3 class="text-sm font-medium text-gray-700 mb-3">推荐问题</h3>
+            <div class="space-y-2">
+                <button onclick="askQuestion('解读当前政策')" class="w-full text-left p-3 bg-white rounded-lg shadow-sm text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    💡 解读当前政策
+                </button>
+                <button onclick="askQuestion('哪些企业可以申报这项政策')" class="w-full text-left p-3 bg-white rounded-lg shadow-sm text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    🏢 哪些企业可以申报这项政策
+                </button>
+                <button onclick="askQuestion('类似的相关政策有哪些')" class="w-full text-left p-3 bg-white rounded-lg shadow-sm text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    📋 类似的相关政策有哪些
+                </button>
+            </div>
+        </div>
+        
+        <!-- 对话区域 -->
+        <div id="chatMessages" class="mx-4 mt-4 space-y-3">
+            <!-- 欢迎消息 -->
+            <div class="chat-message flex items-start">
+                <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 mr-2">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1 bg-white rounded-lg p-3 shadow-sm">
+                    <p class="text-sm text-gray-700">您好！我是AI政策助手，可以帮您解答关于这项政策的任何问题。请选择推荐问题或输入您的问题。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 输入框 -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+            <div class="flex items-center space-x-2">
+                <input type="text" id="questionInput" placeholder="输入您的问题..." 
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:border-blue-500"
+                       onkeypress="if(event.key==='Enter') sendQuestion()">
+                <button onclick="sendQuestion()" class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const policyId = urlParams.get('id') || 1;
+
+        function goBack() {
+            window.location.href = 'resources.html';
+        }
+
+        function sharePolicy() {
+            alert('分享政策功能');
+        }
+
+        function switchTab(tab) {
+            // 隐藏所有内容
+            document.getElementById('detail-content').classList.add('hidden');
+            document.getElementById('summary-content').classList.add('hidden');
+            document.getElementById('qa-content').classList.add('hidden');
+            
+            // 重置所有tab样式
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('border-blue-600');
+                item.classList.add('border-transparent');
+                item.querySelector('span').classList.remove('text-blue-600', 'font-semibold');
+                item.querySelector('span').classList.add('text-gray-600');
+            });
+            
+            // 显示选中的内容和样式
+            const tabElement = event.currentTarget;
+            tabElement.classList.add('border-blue-600');
+            tabElement.classList.remove('border-transparent');
+            tabElement.querySelector('span').classList.add('text-blue-600', 'font-semibold');
+            tabElement.querySelector('span').classList.remove('text-gray-600');
+            
+            document.getElementById(tab + '-content').classList.remove('hidden');
+        }
+
+        function downloadFile(filename) {
+            alert('下载文件：' + filename);
+        }
+
+        function askQuestion(question) {
+            document.getElementById('questionInput').value = question;
+            sendQuestion();
+        }
+
+        function sendQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // 添加用户消息
+            addMessage(question, 'user');
+            
+            // 清空输入框
+            input.value = '';
+            
+            // 模拟AI回复
+            setTimeout(() => {
+                let answer = '';
+                if (question.includes('解读')) {
+                    answer = '这项政策主要针对新能源产业，提供三大类支持：\n\n1. 财政支持：最高500万元项目补贴，30%研发费用补助\n2. 税收优惠：企业所得税"三免三减半"，增值税即征即退\n3. 金融支持：信贷支持、绿色债券、产业投资基金\n\n政策覆盖光伏、风电、新能源汽车、储能、氢能等领域，有效期3年。';
+                } else if (question.includes('企业') || question.includes('申报')) {
+                    answer = '可以申报这项政策的企业需要满足以下条件：\n\n✓ 在中国境内依法注册的企业法人\n✓ 从事新能源相关产业\n✓ 财务状况良好，无重大违法违规记录\n✓ 项目符合国家产业政策和环保要求\n✓ 具有完善的项目实施方案\n\n特别适合：光伏企业、风电企业、新能源汽车企业、储能技术企业、氢能企业等。';
+                } else if (question.includes('相关政策') || question.includes('类似')) {
+                    answer = '与本政策相关的政策还有：\n\n1. 《智能制造产业专项资金管理办法》- 支持智能制造技术应用\n2. 《高新技术企业研发费用加计扣除实施细则》- 研发费用税收优惠\n3. 《绿色低碳产业发展专项扶持政策》- 支持节能环保技术\n4. 《新能源汽车推广应用财政补贴政策》- 新能源汽车专项支持\n\n您可以在政策列表中查看这些政策的详细信息。';
+                } else {
+                    answer = '感谢您的提问。关于"' + question + '"，我建议您：\n\n1. 仔细阅读政策详情中的相关章节\n2. 查看政策摘要中的关键要点\n3. 下载政策解读文件了解更多细节\n4. 如有具体问题，可以咨询当地发改委\n\n如果您还有其他问题，欢迎继续提问！';
+                }
+                addMessage(answer, 'ai');
+            }, 1000);
+        }
+
+        function addMessage(text, type) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message flex items-start';
+            
+            if (type === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex-1"></div>
+                    <div class="bg-blue-600 text-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0 ml-2">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 mr-2">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1 bg-white rounded-lg p-3 shadow-sm">
+                        <p class="text-sm text-gray-700 whitespace-pre-line">${text}</p>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // 滚动到底部
+            setTimeout(() => {
+                messageDiv.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
+

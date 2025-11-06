@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业全景 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .indicator-item {
+            transition: transform 0.2s;
+        }
+        .indicator-item:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">产业全景</h1>
+            <button onclick="shareContent()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 筛选器 -->
+        <div class="bg-white px-4 py-3 border-b">
+            <div class="mb-3">
+                <div class="text-xs text-gray-600 mb-2">产业链</div>
+                <div class="flex items-center space-x-2 overflow-x-auto">
+                    <button class="filter-btn px-3 py-1.5 bg-blue-600 text-white text-xs rounded-full whitespace-nowrap" onclick="selectIndustry('all')">
+                        全部
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap" onclick="selectIndustry('smart')">
+                        智能制造
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap" onclick="selectIndustry('energy')">
+                        新能源
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap" onclick="selectIndustry('bio')">
+                        生物医药
+                    </button>
+                    <button class="filter-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full whitespace-nowrap" onclick="selectIndustry('electronic')">
+                        电子信息
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="text-xs text-gray-600 mb-2">年份</div>
+                <div class="flex items-center space-x-2">
+                    <button class="year-btn px-3 py-1.5 bg-blue-600 text-white text-xs rounded-full" onclick="selectYear('2024')">
+                        2024
+                    </button>
+                    <button class="year-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full" onclick="selectYear('2023')">
+                        2023
+                    </button>
+                    <button class="year-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full" onclick="selectYear('2022')">
+                        2022
+                    </button>
+                    <button class="year-btn px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-full" onclick="selectYear('2021')">
+                        2021
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产业规模概览 -->
+        <div class="gradient-bg text-white px-4 py-6">
+            <div class="text-center mb-6">
+                <div class="text-sm opacity-90 mb-2">产业总规模</div>
+                <div class="text-4xl font-bold mb-1">¥8,562亿</div>
+                <div class="text-sm opacity-80 flex items-center justify-center">
+                    <span class="mr-1">↑</span>
+                    <span>同比增长 15.8%</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <div class="text-center">
+                    <div class="text-2xl font-bold mb-1">12,458</div>
+                    <div class="text-xs opacity-80">企业数量</div>
+                </div>
+                <div class="text-center border-l border-r border-white border-opacity-30">
+                    <div class="text-2xl font-bold mb-1">38万</div>
+                    <div class="text-xs opacity-80">研发投入</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold mb-1">156万</div>
+                    <div class="text-xs opacity-80">从业人员</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 发展趋势 -->
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-bold text-gray-800">发展趋势</h2>
+                <div class="flex items-center space-x-2 text-xs">
+                    <button class="px-3 py-1 bg-blue-600 text-white rounded-full" onclick="changePeriod('year')">年度</button>
+                    <button class="px-3 py-1 text-gray-600 rounded-full" onclick="changePeriod('quarter')">季度</button>
+                    <button class="px-3 py-1 text-gray-600 rounded-full" onclick="changePeriod('month')">月度</button>
+                </div>
+            </div>
+            <div class="relative" style="height: 200px;">
+                <canvas id="trendChart"></canvas>
+            </div>
+            <div class="mt-3 flex items-center justify-center space-x-4 text-xs">
+                <div class="flex items-center">
+                    <div class="w-3 h-3 bg-blue-600 rounded-full mr-1"></div>
+                    <span class="text-gray-600">产业规模</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                    <span class="text-gray-600">增长率</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产业地图 -->
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 card-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-bold text-gray-800">产业地图分布</h2>
+                <button onclick="toggleMapView()" class="text-xs text-blue-600">切换视图</button>
+            </div>
+
+            <!-- 地图热力图 -->
+            <div class="relative bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-4 mb-4" style="height: 280px;">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&h=600&fit=crop"
+                     class="w-full h-full object-cover rounded-lg opacity-20 absolute inset-0" alt="地图背景">
+
+                <!-- 区域热力点 -->
+                <div class="relative z-10 h-full">
+                    <!-- 东部区域 - 高密度 -->
+                    <div class="absolute top-1/4 right-1/4 cursor-pointer" onclick="showRegionDetail('east')">
+                        <div class="relative">
+                            <div class="w-16 h-16 bg-red-500 rounded-full opacity-40 animate-pulse"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-red-700">东部</div>
+                                    <div class="text-xs text-red-600">4,856家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 中部区域 - 中密度 -->
+                    <div class="absolute top-1/3 left-1/3 cursor-pointer" onclick="showRegionDetail('central')">
+                        <div class="relative">
+                            <div class="w-14 h-14 bg-orange-500 rounded-full opacity-40 animate-pulse" style="animation-delay: 0.3s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-orange-700">中部</div>
+                                    <div class="text-xs text-orange-600">3,245家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 西部区域 - 中低密度 -->
+                    <div class="absolute bottom-1/4 left-1/5 cursor-pointer" onclick="showRegionDetail('west')">
+                        <div class="relative">
+                            <div class="w-12 h-12 bg-yellow-500 rounded-full opacity-40 animate-pulse" style="animation-delay: 0.6s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-yellow-700">西部</div>
+                                    <div class="text-xs text-yellow-600">2,158家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 南部区域 - 高密度 -->
+                    <div class="absolute bottom-1/5 right-1/3 cursor-pointer" onclick="showRegionDetail('south')">
+                        <div class="relative">
+                            <div class="w-15 h-15 bg-red-400 rounded-full opacity-40 animate-pulse" style="animation-delay: 0.9s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-red-700">南部</div>
+                                    <div class="text-xs text-red-600">4,125家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 北部区域 - 低密度 -->
+                    <div class="absolute top-1/6 left-1/2 cursor-pointer" onclick="showRegionDetail('north')">
+                        <div class="relative">
+                            <div class="w-10 h-10 bg-green-500 rounded-full opacity-40 animate-pulse" style="animation-delay: 1.2s;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-xs font-bold text-green-700">北部</div>
+                                    <div class="text-xs text-green-600">1,874家</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 企业列表标题 -->
+            <div class="flex items-center justify-between text-xs mb-3">
+                <span class="text-gray-600">企业列表</span>
+                <button class="text-blue-600 flex items-center" onclick="viewMoreEnterprises()">
+                    查看更多
+                    <svg class="w-3 h-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- 区域统计列表 -->
+            <div class="space-y-2" id="enterpriseList">
+                <!-- 企业列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 产业结构 -->
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 card-shadow">
+            <h2 class="text-base font-bold text-gray-800 mb-4">产业结构</h2>
+            <div class="space-y-3">
+                <!-- 上游 -->
+                <div class="indicator-item bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 cursor-pointer active:scale-98" onclick="viewIndustryLevel('新能源', '上游')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">上游</div>
+                                <div class="text-xs text-gray-500">原材料供应</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-blue-600">3,245</div>
+                            <div class="text-xs text-gray-500">企业数</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="text-gray-600">占比</span>
+                        <span class="font-semibold text-blue-600">26.0%</span>
+                    </div>
+                    <div class="mb-2">
+                        <div class="text-xs text-gray-600 mb-1">子节点</div>
+                        <div class="flex flex-wrap gap-1">
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">原材料</span>
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">基础零部件</span>
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs">能源供应</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-600 mb-1">代表企业</div>
+                        <div class="text-xs text-gray-800 font-medium">福建龙净环保股份有限公司、合肥阳光电源股份有限公司</div>
+                    </div>
+                </div>
+
+                <!-- 中游 -->
+                <div class="indicator-item bg-gradient-to-r from-green-50 to-green-100 rounded-lg p-4 cursor-pointer active:scale-98" onclick="viewIndustryLevel('新能源', '中游')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">中游</div>
+                                <div class="text-xs text-gray-500">生产制造</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-green-600">5,128</div>
+                            <div class="text-xs text-gray-500">企业数</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="text-gray-600">占比</span>
+                        <span class="font-semibold text-green-600">41.2%</span>
+                    </div>
+                    <div class="mb-2">
+                        <div class="text-xs text-gray-600 mb-1">子节点</div>
+                        <div class="flex flex-wrap gap-1">
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">组件制造</span>
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">设备生产</span>
+                            <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs">系统集成</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-600 mb-1">代表企业</div>
+                        <div class="text-xs text-gray-800 font-medium">科大国创股份有限公司、科大讯飞股份有限公司</div>
+                    </div>
+                </div>
+
+                <!-- 下游 -->
+                <div class="indicator-item bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 cursor-pointer active:scale-98" onclick="viewIndustryLevel('新能源', '下游')">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-gray-800">下游</div>
+                                <div class="text-xs text-gray-500">应用服务</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-purple-600">4,085</div>
+                            <div class="text-xs text-gray-500">企业数</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="text-gray-600">占比</span>
+                        <span class="font-semibold text-purple-600">32.8%</span>
+                    </div>
+                    <div class="mb-2">
+                        <div class="text-xs text-gray-600 mb-1">子节点</div>
+                        <div class="flex flex-wrap gap-1">
+                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">应用终端</span>
+                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">运维服务</span>
+                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs">销售渠道</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-600 mb-1">代表企业</div>
+                        <div class="text-xs text-gray-800 font-medium">科大国创云网科技有限公司、安徽华米信息科技有限公司</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产业分析 -->
+        <div class="bg-white mx-4 mt-4 rounded-xl p-4 card-shadow">
+            <h2 class="text-base font-bold text-gray-800 mb-4">产业分析要点</h2>
+            <div class="space-y-3">
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
+                        <span class="text-blue-600 text-xs font-bold">1</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1">产业规模持续扩大</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            产业总规模突破8500亿元，同比增长15.8%，增速位居全国前列，产业集聚效应显著增强。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
+                        <span class="text-green-600 text-xs font-bold">2</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1">创新能力显著提升</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            研发投入强度达4.8%，高于全国平均水平，创新平台建设加快，技术成果转化率持续提高。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mr-3 mt-0.5">
+                        <span class="text-purple-600 text-xs font-bold">3</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1">产业结构优化升级</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            智能制造、新能源等战略性新兴产业占比超过60%，产业链现代化水平不断提升。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 查看详细报告按钮 
+        <div class="mx-4 mt-4">
+            <button onclick="viewDetailReport()" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold shadow-lg active:scale-98">
+                查看完整产业分析报告
+            </button>
+        </div>-->
+    </div>
+
+    <script>
+        // 当前选中的区域
+        let currentRegion = 'all';
+
+        // 企业数据
+        const enterprisesData = {
+            all: [
+                { id: 1, name: '福建龙净环保股份有限公司', revenue: '4856', region: 'east', color: 'red' },
+                { id: 2, name: '科大讯飞股份有限公司', revenue: '4125', region: 'south', color: 'red' },
+                { id: 3, name: '合肥阳光电源股份有限公司', revenue: '3245', region: 'central', color: 'orange' },
+                { id: 4, name: '科大国创股份有限公司', revenue: '2158', region: 'west', color: 'yellow' },
+                { id: 5, name: '科大国创云网科技有限公司', revenue: '1874', region: 'north', color: 'green' }
+            ],
+            east: [
+                { id: 1, name: '福建龙净环保股份有限公司', revenue: '4856', region: 'east', color: 'red' },
+                { id: 6, name: '东部新能源科技有限公司', revenue: '3200', region: 'east', color: 'red' },
+                { id: 7, name: '东部智能制造股份公司', revenue: '2800', region: 'east', color: 'red' },
+                { id: 8, name: '东部电子信息有限公司', revenue: '2400', region: 'east', color: 'red' },
+                { id: 9, name: '东部生物医药集团', revenue: '1900', region: 'east', color: 'red' }
+            ],
+            central: [
+                { id: 3, name: '合肥阳光电源股份有限公司', revenue: '3245', region: 'central', color: 'orange' },
+                { id: 10, name: '中部智能装备有限公司', revenue: '2600', region: 'central', color: 'orange' },
+                { id: 11, name: '中部新材料科技公司', revenue: '2200', region: 'central', color: 'orange' },
+                { id: 12, name: '中部环保科技股份公司', revenue: '1800', region: 'central', color: 'orange' },
+                { id: 13, name: '中部电力设备有限公司', revenue: '1500', region: 'central', color: 'orange' }
+            ],
+            west: [
+                { id: 4, name: '科大国创股份有限公司', revenue: '2158', region: 'west', color: 'yellow' },
+                { id: 14, name: '西部新能源开发公司', revenue: '1800', region: 'west', color: 'yellow' },
+                { id: 15, name: '西部智能科技有限公司', revenue: '1500', region: 'west', color: 'yellow' },
+                { id: 16, name: '西部清洁能源股份公司', revenue: '1200', region: 'west', color: 'yellow' },
+                { id: 17, name: '西部环保工程有限公司', revenue: '900', region: 'west', color: 'yellow' }
+            ],
+            south: [
+                { id: 2, name: '科大讯飞股份有限公司', revenue: '4125', region: 'south', color: 'red' },
+                { id: 18, name: '南部智能制造集团', revenue: '3000', region: 'south', color: 'red' },
+                { id: 19, name: '南部新能源科技公司', revenue: '2500', region: 'south', color: 'red' },
+                { id: 20, name: '南部电子科技股份公司', revenue: '2100', region: 'south', color: 'red' },
+                { id: 21, name: '南部生物科技有限公司', revenue: '1700', region: 'south', color: 'red' }
+            ],
+            north: [
+                { id: 5, name: '科大国创云网科技有限公司', revenue: '1874', region: 'north', color: 'green' },
+                { id: 22, name: '北部智能装备有限公司', revenue: '1400', region: 'north', color: 'green' },
+                { id: 23, name: '北部新材料科技公司', revenue: '1100', region: 'north', color: 'green' },
+                { id: 24, name: '北部环保科技股份公司', revenue: '800', region: 'north', color: 'green' },
+                { id: 25, name: '北部清洁能源有限公司', revenue: '600', region: 'north', color: 'green' }
+            ]
+        };
+
+        // 返回首页
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // 分享内容
+        function shareContent() {
+            alert('分享功能：可分享产业全景数据');
+        }
+
+        // 初始化页面
+        function init() {
+            renderEnterpriseList('all');
+        }
+
+        // 渲染企业列表
+        function renderEnterpriseList(region) {
+            currentRegion = region;
+            const enterprises = enterprisesData[region] || enterprisesData.all;
+            const listContainer = document.getElementById('enterpriseList');
+
+            const colorMap = {
+                'red': { bg: 'bg-red-50', dot: 'bg-red-500' },
+                'orange': { bg: 'bg-orange-50', dot: 'bg-orange-500' },
+                'yellow': { bg: 'bg-yellow-50', dot: 'bg-yellow-500' },
+                'green': { bg: 'bg-green-50', dot: 'bg-green-500' }
+            };
+
+            const html = enterprises.map(enterprise => {
+                const colors = colorMap[enterprise.color] || colorMap['red'];
+                return `
+                    <div class="flex items-center justify-between text-sm p-2 ${colors.bg} rounded-lg cursor-pointer active:scale-98" onclick="viewEnterpriseDetail(${enterprise.id})">
+                        <div class="flex items-center flex-1">
+                            <div class="w-3 h-3 ${colors.dot} rounded mr-2 flex-shrink-0"></div>
+                            <span class="text-gray-700">${enterprise.name}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-semibold text-gray-800 mr-1">${enterprise.revenue}万</span>
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            listContainer.innerHTML = html;
+        }
+
+        // 查看企业详情
+        function viewEnterpriseDetail(enterpriseId) {
+            window.location.href = `enterprise-detail.html?id=${enterpriseId}`;
+        }
+
+        // 查看更多企业
+        function viewMoreEnterprises() {
+            window.location.href = 'enterprise.html';
+        }
+
+        // 选择产业链
+        function selectIndustry(industry) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+
+            const names = {
+                'all': '全部产业',
+                'smart': '智能制造',
+                'energy': '新能源',
+                'bio': '生物医药',
+                'electronic': '电子信息'
+            };
+            console.log('切换到：' + names[industry]);
+        }
+
+        // 选择年份
+        function selectYear(year) {
+            const buttons = document.querySelectorAll('.year-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            console.log('切换到：' + year + '年数据');
+        }
+
+        // 切换地图视图
+        function toggleMapView() {
+            alert('切换地图视图模式');
+        }
+
+        // 显示区域详情
+        function showRegionDetail(region) {
+            // 更新企业列表
+            renderEnterpriseList(region);
+
+            // 滚动到企业列表位置
+            const listElement = document.getElementById('enterpriseList');
+            if (listElement) {
+                listElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // 查看产业层级子节点
+        function viewIndustryLevel(industry, level) {
+            window.location.href = `industry-level-nodes.html?industry=${encodeURIComponent(industry)}&level=${encodeURIComponent(level)}`;
+        }
+
+        // 切换时间周期
+        function changePeriod(period) {
+            const buttons = document.querySelectorAll('.bg-blue-600, .text-gray-600');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('text-gray-600');
+            });
+            event.target.classList.add('bg-blue-600', 'text-white');
+            event.target.classList.remove('text-gray-600');
+            alert('切换到' + (period === 'year' ? '年度' : period === 'quarter' ? '季度' : '月度') + '数据');
+        }
+
+        // 初始化趋势图表
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: '产业规模（亿元）',
+                    data: [4200, 5100, 6300, 7200, 7400, 8562],
+                    borderColor: '#1E88E5',
+                    backgroundColor: 'rgba(30, 136, 229, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value / 1000 + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>

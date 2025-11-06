@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业资源 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .tab-item {
+            transition: all 0.2s;
+        }
+        .resource-item {
+            transition: background-color 0.2s;
+        }
+        .resource-item:active {
+            background-color: #F5F7FA;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">产业资源</h1>
+            <button onclick="showSearch()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab切换 -->
+    <div class="bg-white border-b sticky top-14 z-40">
+        <div class="flex items-center">
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-blue-600" onclick="switchTab('policy')">
+                <span class="text-sm font-semibold text-blue-600">政策</span>
+            </div>
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-transparent" onclick="switchTab('news')">
+                <span class="text-sm text-gray-600">资讯</span>
+            </div>
+            <div class="tab-item flex-1 text-center py-3 border-b-2 border-transparent" onclick="switchTab('platform')">
+                <span class="text-sm text-gray-600">创新平台</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 - 政策 -->
+    <div id="policy-content" class="pb-6">
+        <!-- 筛选栏 -->
+        <div class="bg-white px-4 py-3 border-b">
+            <div class="flex items-center space-x-2 overflow-x-auto">
+                <button class="px-3 py-1.5 bg-blue-600 text-white rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('all')">全部</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('national')">国家级</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('provincial')">省级</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('municipal')">市级</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('subsidy')">补贴政策</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap" onclick="filterPolicy('tax')">税收优惠</button>
+            </div>
+        </div>
+
+        <!-- 政策列表 -->
+        <div class="mx-4 mt-4 space-y-3">
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPolicyDetail(1)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">关于支持新能源产业高质量发展的若干政策措施</h3>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded whitespace-nowrap">国家级</span>
+                </div>
+                <!-- 产业标签 -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded">人工智能</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    为加快推动新能源产业高质量发展，支持企业技术创新和产业升级，现制定以下政策措施...
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                        <span>国家发改委</span>
+                        <span>2024-01-15</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="event.stopPropagation(); aiInterpret(1, 'policy')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            AI解读
+                        </button>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span>2,458</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPolicyDetail(2)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">智能制造产业专项资金管理办法</h3>
+                    <span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded whitespace-nowrap">省级</span>
+                </div>
+                <!-- 产业标签 -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">智能机器人</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    为规范智能制造产业专项资金使用管理，提高资金使用效益，支持企业智能化改造...
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                        <span>省工信厅</span>
+                        <span>2024-02-20</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="event.stopPropagation(); aiInterpret(2, 'policy')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            AI解读
+                        </button>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span>1,856</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPolicyDetail(3)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">高新技术企业研发费用加计扣除实施细则</h3>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded whitespace-nowrap">市级</span>
+                </div>
+                <!-- 产业标签 -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">低空经济</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    为鼓励企业加大研发投入，支持科技创新，对符合条件的研发费用实行加计扣除...
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                        <span>市科技局</span>
+                        <span>2024-03-10</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="event.stopPropagation(); aiInterpret(3, 'policy')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            AI解读
+                        </button>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span>3,256</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPolicyDetail(4)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">产业园区企业入驻优惠政策</h3>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded whitespace-nowrap">园区</span>
+                </div>
+                <!-- 产业标签 -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">智能机器人</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    为吸引优质企业入驻产业园区，促进产业集聚发展，对入驻企业提供租金减免、税收优惠等支持...
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                        <span>产业园管委会</span>
+                        <span>2024-03-25</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="event.stopPropagation(); aiInterpret(4, 'policy')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            AI解读
+                        </button>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span>1,425</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPolicyDetail(5)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">绿色低碳产业发展专项扶持政策</h3>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-600 text-xs rounded whitespace-nowrap">国家级</span>
+                </div>
+                <!-- 产业标签 -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">低空经济</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    为推动产业绿色低碳转型，支持节能环保技术应用，对符合条件的项目给予资金补贴和政策支持...
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center space-x-3">
+                        <span>生态环境部</span>
+                        <span>2024-04-05</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="event.stopPropagation(); aiInterpret(5, 'policy')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            AI解读
+                        </button>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span>2,856</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载更多 -->
+        <div class="text-center py-6">
+            <button onclick="loadMore()" class="text-sm text-blue-600">加载更多政策 ↓</button>
+        </div>
+    </div>
+
+    <!-- 主内容区 - 资讯 (默认隐藏) -->
+    <div id="news-content" class="pb-6 hidden">
+        <!-- 筛选栏 -->
+        <div class="bg-white px-4 py-3 border-b">
+            <div class="flex items-center space-x-2 overflow-x-auto">
+                <button class="px-3 py-1.5 bg-blue-600 text-white rounded-full text-xs whitespace-nowrap">全部</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">行业动态</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">企业新闻</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">技术前沿</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">市场分析</button>
+            </div>
+        </div>
+
+        <!-- 资讯列表 -->
+        <div class="mx-4 mt-4 space-y-3">
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showNewsDetail(1)">
+                <div class="flex items-start">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=150&fit=crop"
+                         class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="资讯图片">
+                    <div class="flex-1 min-w-0">
+                        <!-- 标签 -->
+                        <div class="flex items-center space-x-1 mb-1 flex-wrap">
+                            <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded">智能机器人</span>
+                            <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">行业动态</span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                            新能源汽车产销量创历史新高，行业进入快速发展期
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-2 line-clamp-2">
+                            最新数据显示，本月新能源汽车产销量分别达到85.6万辆和88.2万辆，同比增长35.8%和42.3%...
+                        </p>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <div class="flex items-center space-x-2">
+                                <span>产业日报</span>
+                                <span>•</span>
+                                <span>2小时前</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="event.stopPropagation(); aiInterpret(1, 'news')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center mr-2">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                    AI解读
+                                </button>
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>8.5k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showNewsDetail(2)">
+                <div class="flex items-start">
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&h=150&fit=crop"
+                         class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="资讯图片">
+                    <div class="flex-1 min-w-0">
+                        <!-- 标签 -->
+                        <div class="flex items-center space-x-1 mb-1 flex-wrap">
+                            <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded">人工智能</span>
+                            <span class="px-2 py-0.5 bg-pink-100 text-pink-600 text-xs rounded">技术前沿</span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                            人工智能技术赋能制造业，智能工厂建设提速
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-2 line-clamp-2">
+                            随着AI技术的不断成熟，越来越多的制造企业开始布局智能工厂，生产效率提升30%以上...
+                        </p>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <div class="flex items-center space-x-2">
+                                <span>科技前沿</span>
+                                <span>•</span>
+                                <span>5小时前</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="event.stopPropagation(); aiInterpret(2, 'news')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center mr-2">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                    AI解读
+                                </button>
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>6.2k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showNewsDetail(3)">
+                <div class="flex items-start">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=200&h=150&fit=crop"
+                         class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="资讯图片">
+                    <div class="flex-1 min-w-0">
+                        <!-- 标签 -->
+                        <div class="flex items-center space-x-1 mb-1 flex-wrap">
+                            <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded">低空经济</span>
+                            <span class="px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded">市场分析</span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                            芯片产业链加速国产化替代，关键技术取得突破
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-2 line-clamp-2">
+                            国内芯片企业在先进制程、封装测试等领域取得重要进展，国产化率持续提升...
+                        </p>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <div class="flex items-center space-x-2">
+                                <span>行业观察</span>
+                                <span>•</span>
+                                <span>1天前</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <button onclick="event.stopPropagation(); aiInterpret(3, 'news')" class="px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded text-xs font-semibold flex items-center mr-2">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                    AI解读
+                                </button>
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>12.8k</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 - 创新平台 (默认隐藏) -->
+    <div id="platform-content" class="pb-6 hidden">
+        <!-- 筛选栏 -->
+        <div class="bg-white px-4 py-3 border-b">
+            <div class="flex items-center space-x-2 overflow-x-auto">
+                <button class="px-3 py-1.5 bg-blue-600 text-white rounded-full text-xs whitespace-nowrap">全部</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">人工智能</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">低空经济</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">智能机器人</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">综合</button>
+                <button class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs whitespace-nowrap">其他</button>
+            </div>
+        </div>
+
+        <!-- 平台列表 -->
+        <div class="mx-4 mt-4 space-y-3">
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPlatformDetail(1)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">国家人工智能技术创新中心</h3>
+                    <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded whitespace-nowrap">人工智能</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    专注于人工智能核心技术研发与应用，推动AI技术在各行业的深度融合与创新发展。
+                </p>
+                <div class="space-y-2 text-xs text-gray-600 mb-3">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-gray-500">成立时间：</span>
+                        <span class="ml-1">2020年6月</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">人员数量：</span>
+                        <span class="ml-1">356人</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">地址：</span>
+                        <span class="ml-1">高新区创新大道128号</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <span class="text-gray-500">地区：</span>
+                        <span class="ml-1">高新区</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPlatformDetail(2)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">智能机器人产业技术研究院</h3>
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded whitespace-nowrap">智能机器人</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    聚焦工业机器人、服务机器人等领域，提供技术研发、成果转化、人才培养等全方位服务。
+                </p>
+                <div class="space-y-2 text-xs text-gray-600 mb-3">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-gray-500">成立时间：</span>
+                        <span class="ml-1">2021年3月</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">人员数量：</span>
+                        <span class="ml-1">228人</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">地址：</span>
+                        <span class="ml-1">经开区智能制造园8号楼</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <span class="text-gray-500">地区：</span>
+                        <span class="ml-1">经开区</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPlatformDetail(3)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">低空经济产业创新中心</h3>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded whitespace-nowrap">低空经济</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    致力于无人机、eVTOL等低空飞行器技术研发，推动低空经济产业化发展。
+                </p>
+                <div class="space-y-2 text-xs text-gray-600 mb-3">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-gray-500">成立时间：</span>
+                        <span class="ml-1">2022年9月</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">人员数量：</span>
+                        <span class="ml-1">185人</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">地址：</span>
+                        <span class="ml-1">包河区航空产业园5号</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <span class="text-gray-500">地区：</span>
+                        <span class="ml-1">包河区</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-item bg-white rounded-xl p-4 shadow-sm" onclick="showPlatformDetail(4)">
+                <div class="flex items-start justify-between mb-2">
+                    <h3 class="text-sm font-bold text-gray-800 flex-1 pr-2">综合性产业技术研究院</h3>
+                    <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded whitespace-nowrap">综合</span>
+                </div>
+                <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                    涵盖多个产业领域，提供技术咨询、成果转化、创业孵化等综合性服务。
+                </p>
+                <div class="space-y-2 text-xs text-gray-600 mb-3">
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-gray-500">成立时间：</span>
+                        <span class="ml-1">2019年12月</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">人员数量：</span>
+                        <span class="ml-1">412人</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-gray-500">地址：</span>
+                        <span class="ml-1">瑶海区科技大道66号</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                        <span class="text-gray-500">地区：</span>
+                        <span class="ml-1">瑶海区</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 智能虚拟人浮动按钮 -->
+    <div class="fixed bottom-20 right-4 z-50" onclick="goToAI()">
+        <div class="relative">
+            <!-- 脉冲动画圆圈 -->
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full animate-ping opacity-75"></div>
+            <!-- 虚拟人按钮 -->
+            <div class="relative w-14 h-14 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg cursor-pointer transform hover:scale-110 transition-transform">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+            </div>
+            <!-- AI标签 -->
+            <div class="absolute -top-2 -right-2 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-semibold">
+                AI
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function showSearch() {
+            alert('打开搜索功能');
+        }
+
+        function goToAI() {
+            window.location.href = 'ai.html';
+        }
+
+        function aiInterpret(id, type) {
+            alert('AI正在解读' + type + ' ID: ' + id + '\n\n即将跳转到AI智能问答页面...');
+            setTimeout(() => {
+                window.location.href = 'ai.html';
+            }, 1000);
+        }
+
+        function switchTab(tab) {
+            // 隐藏所有内容
+            document.getElementById('policy-content').classList.add('hidden');
+            document.getElementById('news-content').classList.add('hidden');
+            document.getElementById('platform-content').classList.add('hidden');
+            
+            // 重置所有tab样式
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('border-blue-600');
+                item.classList.add('border-transparent');
+                item.querySelector('span').classList.remove('text-blue-600', 'font-semibold');
+                item.querySelector('span').classList.add('text-gray-600');
+            });
+            
+            // 显示选中的内容和样式
+            const tabElement = event.currentTarget;
+            tabElement.classList.add('border-blue-600');
+            tabElement.classList.remove('border-transparent');
+            tabElement.querySelector('span').classList.add('text-blue-600', 'font-semibold');
+            tabElement.querySelector('span').classList.remove('text-gray-600');
+            
+            document.getElementById(tab + '-content').classList.remove('hidden');
+        }
+
+        function filterPolicy(type) {
+            alert('筛选政策类型：' + type);
+        }
+
+        function showPolicyDetail(id) {
+            window.location.href = `policy-detail.html?id=${id}`;
+        }
+
+        function showNewsDetail(id) {
+            window.location.href = `news-detail.html?id=${id}`;
+        }
+
+        function showPlatformDetail(id) {
+            window.location.href = `platform-detail.html?id=${id}`;
+        }
+
+        function loadMore() {
+            alert('加载更多内容');
+        }
+    </script>
+</body>
+</html>

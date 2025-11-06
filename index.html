@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>产业大脑 - 首页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        }
+        .app-icon {
+            transition: transform 0.2s;
+        }
+        .app-icon:active {
+            transform: scale(0.95);
+        }
+        .tab-bar {
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        .active-tab {
+            color: #1E88E5;
+        }
+        .news-item {
+            transition: background-color 0.2s;
+        }
+        .news-item:active {
+            background-color: #F5F7FA;
+        }
+        /* Banner轮播动画 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .banner-slide {
+            animation: slideIn 0.5s ease-out;
+        }
+        /* 搜索框动画 */
+        .search-box:focus-within {
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部标题栏 -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center justify-between mb-3">
+            <h1 class="text-xl font-bold">产业大脑</h1>
+            <div class="flex items-center space-x-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 搜索框 -->
+        <div class="search-box relative transition-all duration-300">
+            <input
+                type="text"
+                id="globalSearch"
+                placeholder="搜企业、搜资讯..."
+                class="w-full pl-10 pr-20 py-2.5 bg-white bg-opacity-20 backdrop-blur-sm border border-white border-opacity-30 rounded-full text-sm text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:bg-white focus:bg-opacity-30 focus:border-opacity-50 transition-all"
+                onfocus="showSearchType()"
+                oninput="handleGlobalSearch()"
+            >
+<!--            <svg class="w-5 h-5 text-white absolute left-3 top-1/2 transform -translate-y-1/2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>-->
+
+            <!-- 搜索类型切换 -->
+            <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+                <button id="searchTypeBtn" onclick="toggleSearchType()" class="px-2.5 py-1 bg-white bg-opacity-30 text-white text-xs rounded-full font-medium">
+                    企业
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div id="main-content" class="pb-20">
+        <!-- Banner轮播 -->
+        <div class="relative overflow-hidden bg-gradient-to-r from-blue-500 to-indigo-600">
+            <div id="bannerContainer" class="banner-slide">
+                <!-- Banner 1 -->
+                <div class="banner-item relative h-40" data-index="0">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop"
+                         class="w-full h-full object-cover opacity-40" alt="Banner">
+                    <div class="absolute inset-0 px-5 py-4 flex flex-col justify-center">
+                        <h3 class="text-white text-lg font-bold mb-2">2024年智能机器人产业发展研究报告</h3>
+                        <p class="text-white text-sm opacity-90 mb-3">智能机器人 • 2024-03</p>
+                        <button onclick="viewBannerDetail(1)" class="self-start px-4 py-1.5 bg-white bg-opacity-90 text-blue-600 text-xs rounded-full font-semibold">
+                            了解详情 →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banner指示器 -->
+            <div class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2">
+                <div class="w-2 h-2 rounded-full bg-white opacity-90"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40"></div>
+                <div class="w-2 h-2 rounded-full bg-white opacity-40"></div>
+            </div>
+        </div>
+
+        <!-- 数据统计区 - 优化版 -->
+        <div class="px-4 py-4 bg-white">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-base font-bold text-gray-800">数据概览</h2>
+                <span class="text-xs text-gray-500">实时更新</span>
+            </div>
+
+            <!-- 紧凑型4列布局 -->
+            <div class="grid grid-cols-4 gap-2 mb-3">
+                <!-- 企业总数 -->
+                <div class="stat-card rounded-lg p-2.5 text-white shadow-sm text-center">
+                    <div class="text-lg font-bold mb-0.5">12,458</div>
+                    <div class="text-xs opacity-90">企业</div>
+                </div>
+
+                <!-- 产业链条数 -->
+                <div class="stat-card rounded-lg p-2.5 text-white shadow-sm text-center">
+                    <div class="text-lg font-bold mb-0.5">38</div>
+                    <div class="text-xs opacity-90">产业链</div>
+                </div>
+
+                <!-- 招商项目数 -->
+                <div class="stat-card rounded-lg p-2.5 text-white shadow-sm text-center">
+                    <div class="text-lg font-bold mb-0.5">856</div>
+                    <div class="text-xs opacity-90">招商项目</div>
+                </div>
+
+                <!-- 创新平台数 -->
+                <div class="stat-card rounded-lg p-2.5 text-white shadow-sm text-center">
+                    <div class="text-lg font-bold mb-0.5">124</div>
+                    <div class="text-xs opacity-90">创新平台</div>
+                </div>
+            </div>
+
+            <!-- 增长趋势条 -->
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="text-xs">
+                    <span class="text-green-600 font-semibold">↑5.2%</span>
+                </div>
+                <div class="text-xs">
+                    <span class="text-green-600 font-semibold">↑5.3%</span>
+                </div>
+                <div class="text-xs">
+                    <span class="text-green-600 font-semibold">↑12.8%</span>
+                </div>
+                <div class="text-xs">
+                    <span class="text-green-600 font-semibold">↑6.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用模块 -->
+        <div class="bg-white px-4 py-5 mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-gray-800">应用服务</h2>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <!-- 产业全景 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('panorama')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">产业全景</span>
+                </div>
+
+                <!-- 产业图谱 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('atlas')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">产业图谱</span>
+                </div>
+
+                <!-- 企业云图 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('enterprise')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">企业云图</span>
+                </div>
+
+                <!-- 产业资源 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('resources')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">产业资源</span>
+                </div>
+
+                <!-- 产业报告 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('reports')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">产业报告</span>
+                </div>
+
+                <!-- 产业招商 -->
+                <div class="app-icon flex flex-col items-center" onclick="navigateTo('investment')">
+                    <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mb-2 shadow-md">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <span class="text-xs text-gray-700">招商项目</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 热门资讯 -->
+        <div class="bg-white px-4 py-5 mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-gray-800">热门资讯</h2>
+                <span class="text-sm text-blue-600">更多 →</span>
+            </div>
+            <div class="space-y-3">
+                <!-- 资讯项1 -->
+                <div class="news-item rounded-lg p-3 border border-gray-100" onclick="showNewsDetail(1)">
+                    <div class="flex items-start">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=200&h=150&fit=crop"
+                             class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="新闻图片">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center mb-1">
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded mr-2">行业动态</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                                新能源产业链迎来重大突破，多家企业签署战略合作协议
+                            </h3>
+                            <p class="text-xs text-gray-500 mb-2 line-clamp-1">
+                                产业链上下游企业加强合作，推动技术创新和产业升级...
+                            </p>
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>产业日报</span>
+                                <span>2小时前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 资讯项2 -->
+                <div class="news-item rounded-lg p-3 border border-gray-100" onclick="showNewsDetail(2)">
+                    <div class="flex items-start">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=200&h=150&fit=crop"
+                             class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="新闻图片">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center mb-1">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-600 text-xs rounded mr-2">市场分析</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                                智能制造产业园区正式启动，预计吸引投资超50亿元
+                            </h3>
+                            <p class="text-xs text-gray-500 mb-2 line-clamp-1">
+                                园区将重点发展智能装备、工业机器人等领域...
+                            </p>
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>经济观察报</span>
+                                <span>5小时前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 资讯项3 -->
+                <div class="news-item rounded-lg p-3 border border-gray-100" onclick="showNewsDetail(3)">
+                    <div class="flex items-start">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=200&h=150&fit=crop"
+                             class="w-24 h-18 rounded-lg object-cover mr-3 flex-shrink-0" alt="新闻图片">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center mb-1">
+                                <span class="px-2 py-0.5 bg-purple-100 text-purple-600 text-xs rounded mr-2">技术前沿</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1 line-clamp-2">
+                                数字经济发展白皮书发布，产业数字化转型加速推进
+                            </h3>
+                            <p class="text-xs text-gray-500 mb-2 line-clamp-1">
+                                报告指出，数字经济已成为推动经济增长的重要引擎...
+                            </p>
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>科技日报</span>
+                                <span>1天前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部Tab导航栏 -->
+    <div class="tab-bar fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+        <div class="flex items-center justify-around">
+            <!-- 首页 -->
+            <div class="flex flex-col items-center active-tab" onclick="switchTab('home')">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+                </svg>
+                <span class="text-xs">首页</span>
+            </div>
+            
+            <!-- AI -->
+            <div class="flex flex-col items-center text-gray-500" onclick="switchTab('ai')">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"></path>
+                </svg>
+                <span class="text-xs">AI</span>
+            </div>
+            
+            <!-- 我的 -->
+            <div class="flex flex-col items-center text-gray-500" onclick="switchTab('profile')">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                </svg>
+                <span class="text-xs">我的</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 搜索类型：'enterprise' 或 'news'
+        let searchType = 'enterprise';
+
+        // 切换搜索类型
+        function toggleSearchType() {
+            const btn = document.getElementById('searchTypeBtn');
+            const input = document.getElementById('globalSearch');
+
+            if (searchType === 'enterprise') {
+                searchType = 'news';
+                btn.textContent = '资讯';
+                input.placeholder = '搜资讯...';
+            } else {
+                searchType = 'enterprise';
+                btn.textContent = '企业';
+                input.placeholder = '搜企业...';
+            }
+
+            // 清空搜索框
+            input.value = '';
+        }
+
+        // 显示搜索类型选择
+        function showSearchType() {
+            // 可以在这里添加更多交互效果
+        }
+
+        // 全局搜索处理
+        function handleGlobalSearch() {
+            const input = document.getElementById('globalSearch');
+            const keyword = input.value.trim();
+
+            if (!keyword) return;
+
+            // 这里可以实现实时搜索建议
+            console.log(`搜索${searchType === 'enterprise' ? '企业' : '资讯'}:`, keyword);
+
+            // 回车键触发搜索
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(keyword);
+                }
+            });
+        }
+
+        // 执行搜索
+        function performSearch(keyword) {
+            if (searchType === 'enterprise') {
+                alert(`搜索企业：${keyword}\n即将跳转到企业云图页面`);
+                // window.location.href = `enterprise.html?search=${encodeURIComponent(keyword)}`;
+            } else {
+                alert(`搜索资讯：${keyword}\n即将跳转到资讯列表页面`);
+                // window.location.href = `resources.html?search=${encodeURIComponent(keyword)}`;
+            }
+        }
+
+        // Banner相关
+        let currentBannerIndex = 0;
+        const banners = [
+            {
+                image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop',
+                title: '产业数字化转型加速',
+                desc: '智能制造、新能源等领域迎来新机遇',
+                id: 1
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=400&fit=crop',
+                title: '新能源产业蓬勃发展',
+                desc: '政策支持力度加大，投资热度持续升温',
+                id: 2
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop',
+                title: 'AI赋能产业升级',
+                desc: '人工智能技术深度融合传统产业',
+                id: 3
+            }
+        ];
+
+        // 查看Banner详情
+        function viewBannerDetail(id) {
+            alert(`查看Banner详情：${id}`);
+        }
+
+        // 自动轮播Banner（可选）
+        // setInterval(() => {
+        //     currentBannerIndex = (currentBannerIndex + 1) % banners.length;
+        //     updateBanner();
+        // }, 5000);
+
+        // 页面导航
+        function navigateTo(page) {
+            const pages = {
+                'panorama': 'panorama.html',
+                'atlas': 'atlas.html',
+                'enterprise': 'enterprise.html',
+                'resources': 'resources.html',
+                'reports': 'reports.html',
+                'investment': 'investment.html'
+            };
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            } else {
+                alert('即将打开：' + getPageName(page));
+            }
+        }
+
+        function getPageName(page) {
+            const names = {
+                'panorama': '产业全景',
+                'atlas': '产业图谱',
+                'enterprise': '企业云图',
+                'resources': '产业资源',
+                'reports': '产业报告',
+                'investment': '产业招商'
+            };
+            return names[page] || page;
+        }
+
+        // 显示资讯详情
+        function showNewsDetail(id) {
+            console.log('查看资讯:', id);
+            alert('即将打开资讯详情页');
+        }
+
+        // Tab切换
+        function switchTab(tab) {
+            if (tab === 'home') {
+                // 当前已在首页
+                return;
+            } else if (tab === 'ai') {
+                window.location.href = 'ai.html';
+            } else if (tab === 'profile') {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        // 防止页面滚动时的橡皮筋效果
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target.closest('#main-content')) {
+                return;
+            }
+            e.preventDefault();
+        }, { passive: false });
+    </script>
+</body>
+</html>

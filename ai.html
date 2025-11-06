@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI智能问答 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        .message-bubble {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #9CA3AF;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+        #chatMessages {
+            height: calc(100vh - 280px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="gradient-bg text-white px-4 py-3 sticky top-0 z-50">
+        <div class="flex items-center justify-between">
+            <button onclick="goBack()" class="mr-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold flex-1">AI 智能问答</h1>
+            <div class="flex items-center">
+                <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot mr-1"></div>
+                <span class="text-xs">在线</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 推荐问题区域 -->
+    <div class="gradient-bg text-white px-4 pb-4">
+        <div class="text-xs mb-2 opacity-90">💡 推荐问题</div>
+        <div class="space-y-2">
+            <div class="bg-white bg-opacity-20 backdrop-blur rounded-lg p-3 text-sm cursor-pointer hover:bg-opacity-30 transition-all" onclick="askQuestion('低空经济top10的企业名单')">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>低空经济top10的企业名单</span>
+                </div>
+            </div>
+            <div class="bg-white bg-opacity-20 backdrop-blur rounded-lg p-3 text-sm cursor-pointer hover:bg-opacity-30 transition-all" onclick="askQuestion('低空经济产业近3年发展趋势')">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    <span>低空经济产业近3年发展趋势</span>
+                </div>
+            </div>
+            <div class="bg-white bg-opacity-20 backdrop-blur rounded-lg p-3 text-sm cursor-pointer hover:bg-opacity-30 transition-all" onclick="askQuestion('最近落实的项目有哪些')">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>最近落实的项目有哪些</span>
+                </div>
+            </div>
+            <div class="bg-white bg-opacity-20 backdrop-blur rounded-lg p-3 text-sm cursor-pointer hover:bg-opacity-30 transition-all" onclick="askQuestion('最新资讯热词')">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    <span>最新资讯热词</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 对话消息区域 -->
+    <div id="chatMessages" class="px-4 py-4 space-y-4">
+        <!-- 欢迎消息 -->
+        <div class="message-bubble flex items-start mb-4">
+            <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm">
+                    <p class="text-sm text-gray-800 leading-relaxed">
+                        您好！我是产业大脑AI助手 🤖<br><br>
+                        我可以帮您解答关于产业数据、企业信息、政策资讯等各类问题。您可以点击上方的推荐问题，或者直接输入您想了解的内容。
+                    </p>
+                </div>
+                <div class="text-xs text-gray-400 mt-1 ml-2">刚刚</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 输入框区域 -->
+    <div class="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-40">
+        <div class="flex items-center space-x-2">
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="输入您的问题..."
+                class="flex-1 px-4 py-3 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onkeypress="handleKeyPress(event)"
+            >
+            <button
+                onclick="sendMessage()"
+                class="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-shadow">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部Tab导航栏 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+        <div class="flex items-center justify-around">
+            <div class="flex flex-col items-center text-gray-500" onclick="goHome()">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+                </svg>
+                <span class="text-xs">首页</span>
+            </div>
+            
+            <div class="flex flex-col items-center text-blue-600">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-3H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"></path>
+                </svg>
+                <span class="text-xs">AI</span>
+            </div>
+            
+            <div class="flex flex-col items-center text-gray-500" onclick="goProfile()">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                </svg>
+                <span class="text-xs">我的</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AI回复数据库
+        const aiResponses = {
+            '低空经济top10的企业名单': {
+                text: '根据最新数据，低空经济领域TOP10企业如下：\n\n1. 亿航智能 - 自动驾驶飞行器领军企业\n2. 顺丰科技 - 物流无人机应用\n3. 大疆创新 - 消费级无人机龙头\n4. 峰飞航空 - eVTOL研发制造\n5. 时的科技 - 载人级自动驾驶飞行器\n6. 沃飞长空 - 吉利旗下飞行汽车\n7. 小鹏汇天 - 飞行汽车研发\n8. 御风未来 - 物流无人机\n9. 丰翼科技 - 美团无人机配送\n10. 迅蚁科技 - 城市物流无人机\n\n这些企业在技术研发、市场应用、融资规模等方面处于行业领先地位。',
+                time: '刚刚'
+            },
+            '低空经济产业近3年发展趋势': {
+                text: '低空经济产业近3年呈现快速发展态势：\n\n📈 **市场规模**\n• 2022年：约2000亿元\n• 2023年：约3500亿元（+75%）\n• 2024年预计：超5000亿元\n\n🚁 **应用场景拓展**\n• 物流配送：顺丰、美团等加速布局\n• 城市空中交通：eVTOL试飞增多\n• 应急救援：政府采购增加\n• 农业植保：市场渗透率提升\n\n💡 **政策支持**\n• 2023年中央一号文件首提"低空经济"\n• 多地出台低空经济发展规划\n• 空域管理改革持续推进\n\n🔬 **技术突破**\n• 续航能力提升至2小时+\n• 自动驾驶技术成熟度提高\n• 安全性和可靠性显著增强',
+                time: '刚刚'
+            },
+            '最近落实的项目有哪些': {
+                text: '最近落实的重点项目包括：\n\n🏭 **制造业项目**\n1. 华能新能源电池生产基地（高新区）\n   投资：50亿元 | 状态：已开工\n\n2. 智能机器人产业园二期（经开区）\n   投资：35亿元 | 状态：建设中\n\n3. 半导体芯片封装测试中心（包河区）\n   投资：28亿元 | 状态：已投产\n\n🔬 **创新平台**\n4. 人工智能技术创新中心（高新区）\n   投资：12亿元 | 状态：已运营\n\n5. 低空经济产业研究院（瑶海区）\n   投资：8亿元 | 状态：筹建中\n\n🌱 **招商引资**\n6. 生物医药产业园（新站区）\n   投资：45亿元 | 状态：签约落地\n\n这些项目将为产业发展注入新动能。',
+                time: '刚刚'
+            },
+            '最新资讯热词': {
+                text: '最新产业资讯热词分析：\n\n🔥 **热度TOP10**\n\n1. **低空经济** 🔥🔥🔥🔥🔥\n   热度指数：98 | 相关资讯：156条\n\n2. **人工智能** 🔥🔥🔥🔥\n   热度指数：95 | 相关资讯：243条\n\n3. **新能源汽车** 🔥🔥🔥🔥\n   热度指数：92 | 相关资讯：189条\n\n4. **智能制造** 🔥🔥🔥\n   热度指数：88 | 相关资讯：167条\n\n5. **芯片国产化** 🔥🔥🔥\n   热度指数：85 | 相关资讯：134条\n\n6. **数字经济** 🔥🔥\n   热度指数：82 | 相关资讯：201条\n\n7. **绿色低碳** 🔥🔥\n   热度指数：79 | 相关资讯：145条\n\n8. **工业互联网** 🔥\n   热度指数：76 | 相关资讯：98条\n\n9. **生物医药** 🔥\n   热度指数：73 | 相关资讯：112条\n\n10. **新材料** 🔥\n    热度指数：70 | 相关资讯：87条',
+                time: '刚刚'
+            }
+        };
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function goProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // 点击推荐问题
+        function askQuestion(question) {
+            const input = document.getElementById('messageInput');
+            input.value = question;
+            sendMessage();
+        }
+
+        // 处理回车键
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // 发送消息
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // 添加用户消息
+            addUserMessage(message);
+
+            // 清空输入框
+            input.value = '';
+
+            // 显示输入中状态
+            showTypingIndicator();
+
+            // 模拟AI思考时间，然后回复
+            setTimeout(() => {
+                hideTypingIndicator();
+                addAIMessage(message);
+            }, 1500);
+        }
+
+        // 添加用户消息
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-bubble flex items-start justify-end mb-4';
+            messageDiv.innerHTML = `
+                <div class="flex-1 flex justify-end">
+                    <div class="max-w-[80%]">
+                        <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl rounded-tr-none p-4 shadow-sm">
+                            <p class="text-sm leading-relaxed">${message}</p>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-1 mr-2 text-right">刚刚</div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // 显示输入中指示器
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'message-bubble flex items-start mb-4';
+            typingDiv.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm">
+                        <div class="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // 隐藏输入中指示器
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // 添加AI消息
+        function addAIMessage(userQuestion) {
+            const chatMessages = document.getElementById('chatMessages');
+
+            // 查找匹配的回复
+            let response = aiResponses[userQuestion];
+
+            // 如果没有匹配的回复，使用默认回复
+            if (!response) {
+                response = {
+                    text: `感谢您的提问！关于"${userQuestion}"，我正在为您查询相关信息...\n\n您可以尝试以下操作：\n• 点击上方的推荐问题获取详细信息\n• 访问产业资源页面查看最新政策和资讯\n• 在企业云图中搜索相关企业信息\n\n如需更多帮助，请联系客服人员。`,
+                    time: '刚刚'
+                };
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-bubble flex items-start mb-4';
+            messageDiv.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm">
+                        <p class="text-sm text-gray-800 leading-relaxed whitespace-pre-line">${response.text}</p>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-1 ml-2">${response.time}</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // 滚动到底部
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

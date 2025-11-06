@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>工商变更记录 - 产业大脑</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center px-4 py-3">
+            <button onclick="goBack()" class="p-1 mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-gray-900">工商变更记录</h1>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="pb-6">
+        <!-- 企业信息 -->
+        <div class="bg-white px-4 py-3 mb-2">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 rounded flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold text-blue-600" id="companyInitial">福</span>
+                </div>
+                <div class="flex-1">
+                    <h2 class="text-base font-bold text-gray-900" id="companyName">福建龙净环保股份有限公司</h2>
+                    <p class="text-xs text-gray-500 mt-1">共 <span class="text-blue-600 font-semibold" id="totalChanges">15</span> 条变更记录</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 变更记录列表 -->
+        <div class="bg-white" id="changesList">
+            <!-- 变更记录将通过JavaScript动态生成 -->
+        </div>
+    </div>
+
+    <script>
+        let currentEnterprise = null;
+
+        // 模拟企业数据
+        const enterprises = [
+            { id: 1, name: '福建龙净环保股份有限公司', industry: '新能源' },
+            { id: 2, name: '合肥阳光电源股份有限公司', industry: '新能源' },
+            { id: 3, name: '科大讯飞股份有限公司', industry: '人工智能' }
+        ];
+
+        // 模拟变更记录数据
+        const changesData = [
+            { date: '2025-08-09', name: '注册资金变更', before: '30000万元', after: '50000万元' },
+            { date: '2025-07-21', name: '经营地址变更', before: '福建省龙岩市新罗区龙州工业园区', after: '福建省龙岩市新罗区龙州工业园区高新技术产业园' },
+            { date: '2024-10-12', name: '法定代表人变更', before: '李明', after: '张明' },
+            { date: '2024-08-15', name: '经营范围变更', before: '环保设备制造、销售', after: '环保设备制造、销售；新能源技术研发；技术咨询服务' },
+            { date: '2024-05-20', name: '股东变更', before: '紫金矿业集团股份有限公司持股25%', after: '紫金矿业集团股份有限公司持股21.08%' },
+            { date: '2024-03-10', name: '注册资金变更', before: '20000万元', after: '30000万元' },
+            { date: '2023-12-05', name: '经营地址变更', before: '福建省龙岩市新罗区工业路123号', after: '福建省龙岩市新罗区龙州工业园区' },
+            { date: '2023-09-18', name: '董事变更', before: '董事：李明、王强、刘华', after: '董事：张明、王强、刘华、陈杰' },
+            { date: '2023-06-25', name: '经营范围变更', before: '环保设备制造', after: '环保设备制造、销售' },
+            { date: '2023-03-12', name: '监事变更', before: '监事：赵敏', after: '监事：赵敏、孙丽' },
+            { date: '2022-11-08', name: '注册资金变更', before: '15000万元', after: '20000万元' },
+            { date: '2022-08-20', name: '法定代表人变更', before: '王强', after: '李明' },
+            { date: '2022-05-15', name: '股东变更', before: '龙岩市国有资产投资经营有限公司持股10%', after: '龙岩市国有资产投资经营有限公司持股7.9%' },
+            { date: '2022-02-10', name: '经营地址变更', before: '福建省龙岩市新罗区中山路88号', after: '福建省龙岩市新罗区工业路123号' },
+            { date: '2021-10-05', name: '经营范围变更', before: '环保设备研发', after: '环保设备研发、制造' }
+        ];
+
+        function init() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const enterpriseId = parseInt(urlParams.get('id')) || 1;
+
+            // 获取企业信息
+            currentEnterprise = enterprises.find(e => e.id === enterpriseId) || enterprises[0];
+
+            // 渲染企业信息
+            document.getElementById('companyName').textContent = currentEnterprise.name;
+            document.getElementById('companyInitial').textContent = currentEnterprise.name.substring(0, 1);
+            document.getElementById('totalChanges').textContent = changesData.length;
+
+            // 渲染变更记录列表
+            renderChangesList();
+        }
+
+        function renderChangesList() {
+            const html = changesData.map((change, index) => `
+                <div class="px-4 py-4 ${index < changesData.length - 1 ? 'border-b border-gray-100' : ''}">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-bold text-gray-900">${change.name}</h3>
+                        <span class="text-xs text-gray-500">${change.date}</span>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-start">
+                            <span class="text-xs text-gray-500 w-16 flex-shrink-0">变更前：</span>
+                            <span class="text-xs text-gray-700 flex-1">${change.before}</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-xs text-gray-500 w-16 flex-shrink-0">变更后：</span>
+                            <span class="text-xs text-blue-600 font-medium flex-1">${change.after}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('changesList').innerHTML = html;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后初始化
+        window.onload = init;
+    </script>
+</body>
+</html>
+
